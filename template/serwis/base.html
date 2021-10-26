@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+    {% include "serwis/head.html" %}
+    <body class="fixed-sn">
+
+        {% include "serwis/header.html" %}
+        {% include "serwis/messages.html" %}
+
+        <main>
+            <div class="container-fluid">
+            <!--Card-->
+                <div class="card card-cascade wider reverse my-1 pb-1">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+            <!--/.Card-->
+            </div>
+        </main>
+
+        {% include "serwis/footer.html" %}
+        {% include "serwis/scripts.html" %}
+
+    </body>
+</html>

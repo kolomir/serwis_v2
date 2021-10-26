@@ -1,0 +1,36 @@
+{% load static %}
+    <!-- jQuery -->
+    <script type="text/javascript" src="{% static 'MDB-Pro_4.19.2/js/jquery.min.js' %}"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="{% static 'MDB-Pro_4.19.2/js/popper.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="{% static 'MDB-Pro_4.19.2/js/bootstrap.min.js' %}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{% static 'MDB-Pro_4.19.2/js/mdb.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'MDB-Pro_4.19.2/js/addons/datatables.min.js' %}"></script>
+    <!-- Your custom scripts (optional) -->
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            // SideNav Button Initialization
+            $(".button-collapse").sideNav2();
+            // SideNav Scrollbar Initialization
+            var sideNavScrollbar = document.querySelector('.custom-scrollbar');
+            var ps = new PerfectScrollbar(sideNavScrollbar);
+        });
+
+        $(document).ready(function () {
+            $('#dtUsterki').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+        $(document).ready(function () {
+            $('#dtUrzadzenia').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+    </script>
