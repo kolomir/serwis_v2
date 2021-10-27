@@ -1,0 +1,28 @@
+{% extends 'serwis/base.html' %}
+{% load bootstrap %}
+{% block content %}
+    <div class="card col-md-12 my-1 mx-auto text-white green darken-1">
+        <div class="card-body">
+            <h2>Nowe Zgłoszenie</h2>
+        </div>
+    </div>
+    <div class="card col-md-12 my-1 mx-auto">
+        <div class="card-body">
+            <form method="post" role="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="md-form md-outline">
+                    <label for="input_temat">Temat zgłoszenia</label>
+                    <input type="text" class="form-control" id="input_temat" name="temat_zgloszenia">
+                </div>
+                <div class="md-form md-outline">
+                    <textarea id="textarea_opis" class="md-textarea form-control" rows="5" name="opis_zgloszenia"></textarea>
+                    <label for="textarea_opis">Opis zgłoszenia</label>
+                </div>
+                <div class="md-form md-outline">
+                    <input type="hidden" id="data_zgloszenia_text" name="data_zgloszenia" value={{ data_zgloszenia }}>
+                    <button type="submit" class="btn btn-primary">Zapisz <i class="fas fa-save fa-lg"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

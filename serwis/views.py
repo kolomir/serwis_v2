@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant
-from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm
+from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie
+from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 
@@ -73,5 +73,39 @@ def nowy_serwisant(request):
         'serwisant': serwisant,
     }
     return render(request, 'serwis/nowy_serwisant.html', context)
+
+
+#---------------------------------------------------
+#  Formularz nowego zgłoszenia
+#---------------------------------------------------
+#@login_required
+def nowe_zgloszenie(request):
+    form_zgloszenie = ZgloszeniForm(request.POST or None, request.FILES or None)
+
+    data_zgl = request.POST.get('data_zgloszenia')
+    temat = request.POST.get('temat_zgloszenia')
+    opis = request.POST.get('opis_zgloszenia')
+
+    print('temat --> ', temat)
+    print('opis --> ', opis)
+    print('data --> ', data_zgl)
+
+    data_teraz = datetime.now()
+    data_zgloszenia = data_teraz.strftime("%Y-%m-%d")
+
+    if form_zgloszenie.is_valid():
+        zglaszajacy = get_author(request.user)
+        print('zglaszajacy --> ', zglaszajacy)
+        #form_zgloszenie.save()
+        return redirect(nowe_zgloszenie)
+
+    context = {
+        'form_zgloszenie': form_zgloszenie,
+        'data_zgloszenia': data_zgloszenia,
+    }
+    return render(request, 'serwis/nowe_zgloszenie.html', context)
+
+
+
 
 

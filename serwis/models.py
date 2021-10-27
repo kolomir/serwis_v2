@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 
 class Autor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
-    serwisant = models.BooleanField(default=False)
     aktywny = models.BooleanField(default=True)
 
     def __str__(self):
@@ -35,5 +34,15 @@ class Serwisant(models.Model):
 
     def __str__(self):
         return self.nr_serwisanta
+
+
+class Zgloszenie(models.Model):
+    data_zgloszenia = models.DateField('data zgłoszenia')
+    temat_zgloszenia = models.CharField(max_length=400, unique=False)
+    opis_zgloszenia = models.TextField()
+    zglaszajacy = models.ForeignKey(Autor, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.temat_zgloszenia
 
 
