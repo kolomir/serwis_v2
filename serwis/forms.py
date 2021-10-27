@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import RodzajUsterki, Urzadzenie
+from .models import RodzajUsterki, Urzadzenie, Serwisant
 
 
 class RodzajUsterkiForm(ModelForm):
@@ -18,4 +18,15 @@ class UrzadzenieForm(ModelForm):
         fields = [
             'nazwa_urzadzenia',
             'aktywny'
+        ]
+
+
+class SerwisantForm(ModelForm):
+    class Meta:
+        model = Serwisant
+        fields = [
+            'nr_serwisanta',
+            'imie',
+            'nazwisko',
+            'aktywny',
         ]

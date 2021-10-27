@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Autor, RodzajUsterki, Urzadzenie
-from .forms import RodzajUsterkiForm, UrzadzenieForm
+from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant
+from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 
@@ -54,3 +54,24 @@ def nowe_Urzadzenie(request):
         'urzadzenia': urzadzenia
     }
     return render(request, 'serwis/nowe_urzadzenia.html', context)
+
+
+#---------------------------------------------------
+#  Formularz do serwisantów
+#---------------------------------------------------
+#@login_required
+def nowy_serwisant(request):
+    form_serwisant = SerwisantForm(request.POST or None, request.FILES or None)
+    serwisant = Serwisant.objects.all().order_by('nazwisko')
+
+    if form_serwisant.is_valid():
+        form_serwisant.save()
+        return redirect(nowy_serwisant)
+
+    context = {
+        'form_serwisant': form_serwisant,
+        'serwisant': serwisant,
+    }
+    return render(request, 'serwis/nowy_serwisant.html', context)
+
+
