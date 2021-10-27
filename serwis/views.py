@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie
 from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm
 from datetime import datetime
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 
@@ -85,23 +86,33 @@ def nowe_zgloszenie(request):
     data_zgl = request.POST.get('data_zgloszenia')
     temat = request.POST.get('temat_zgloszenia')
     opis = request.POST.get('opis_zgloszenia')
+    czas_zgl = request.POST.get('czas_zgloszenia')
 
+#- STREFA TESTU ----------------------------------------------------------------------
     print('temat --> ', temat)
     print('opis --> ', opis)
     print('data --> ', data_zgl)
+    print('czas --> ', czas_zgl)
+
+    zglaszajacy2 = get_author(request.user)
+    print('zglaszajacy --> ', zglaszajacy2)
 
     data_teraz = datetime.now()
     data_zgloszenia = data_teraz.strftime("%Y-%m-%d")
+    czas_teraz = timezone.now()
+    czas_zgloszenia = czas_teraz.strftime("%H:%M")
+
+#------------------------------------------------------------------------------------
 
     if form_zgloszenie.is_valid():
         zglaszajacy = get_author(request.user)
-        print('zglaszajacy --> ', zglaszajacy)
         #form_zgloszenie.save()
         return redirect(nowe_zgloszenie)
 
     context = {
         'form_zgloszenie': form_zgloszenie,
         'data_zgloszenia': data_zgloszenia,
+        'czas_zgloszenia': czas_zgloszenia,
     }
     return render(request, 'serwis/nowe_zgloszenie.html', context)
 

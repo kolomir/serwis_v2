@@ -38,6 +38,7 @@ class Serwisant(models.Model):
 
 class Zgloszenie(models.Model):
     data_zgloszenia = models.DateField('data zgłoszenia')
+    czas_zgloszenia = models.TimeField('czas zgłoszenia')
     temat_zgloszenia = models.CharField(max_length=400, unique=False)
     opis_zgloszenia = models.TextField()
     zglaszajacy = models.ForeignKey(Autor, on_delete=models.CASCADE)
