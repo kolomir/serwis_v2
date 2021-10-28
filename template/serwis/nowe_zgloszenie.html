@@ -19,6 +19,15 @@
                     <label for="textarea_opis">Opis zgłoszenia</label>
                 </div>
                 <div class="md-form md-outline">
+                    <select name="rodzaj_usterki" class="mdb-select md-form" id="combo_rodzaj" required  searchable="Szukaj...">
+                        <option value="" disabled selected>Wybierz rodzaj usterki</option>
+                        {% for result in rodzaj_usterki %}
+                        <option value="{{ result.id }}">{{ result.rodzaj_usterki }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="combo_rodzaj">Rodzaj Usterki</label>
+                </div>
+                <div class="md-form md-outline">
                     <input type="hidden" id="data_zgloszenia_text" name="data_zgloszenia" value={{ data_zgloszenia }}>
                     <input type="hidden" id="czas_zgloszenia_text" name="czas_zgloszenia" value={{ czas_zgloszenia }}>
                     <button type="submit" class="btn btn-primary">Zapisz <i class="fas fa-save fa-lg"></i></button>

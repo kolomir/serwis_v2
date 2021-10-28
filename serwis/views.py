@@ -82,6 +82,7 @@ def nowy_serwisant(request):
 #@login_required
 def nowe_zgloszenie(request):
     form_zgloszenie = ZgloszeniForm(request.POST or None, request.FILES or None)
+    rodzaj_usterki = RodzajUsterki.objects.filter(aktywny=True).order_by('rodzaj_usterki')
 
     data_zgl = request.POST.get('data_zgloszenia')
     temat = request.POST.get('temat_zgloszenia')
@@ -113,6 +114,7 @@ def nowe_zgloszenie(request):
         'form_zgloszenie': form_zgloszenie,
         'data_zgloszenia': data_zgloszenia,
         'czas_zgloszenia': czas_zgloszenia,
+        'rodzaj_usterki': rodzaj_usterki,
     }
     return render(request, 'serwis/nowe_zgloszenie.html', context)
 

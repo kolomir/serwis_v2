@@ -34,3 +34,10 @@ class StatusAdmin(admin.ModelAdmin):
     list_display = ('id', 'nazwa', 'aktywny')
     list_filter = ('aktywny',)
     search_fields = ('nazwa', 'aktywny')
+
+
+@admin.register(Zgloszenie)
+class ZgloszenieAdmin(admin.ModelAdmin):
+    list_display = ('id', 'temat_zgloszenia', 'data_zgloszenia', 'zglaszajacy', 'rodzaj_usterki', 'urzadzenie', 'status')
+    list_filter = ('zglaszajacy', 'rodzaj_usterki', 'urzadzenie', 'status')
+    search_fields = ('id', 'temat_zgloszenia', 'data_zgloszenia', 'zglaszajacy', 'rodzaj_usterki', 'urzadzenie', 'status')
