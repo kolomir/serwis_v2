@@ -35,6 +35,13 @@ class Serwisant(models.Model):
     def __str__(self):
         return self.nr_serwisanta
 
+class Status(models.Model):
+    nazwa = models.CharField(max_length=40, unique=True)
+    aktywny = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nazwa
+
 
 class Zgloszenie(models.Model):
     data_zgloszenia = models.DateField('data zgłoszenia')
@@ -42,6 +49,14 @@ class Zgloszenie(models.Model):
     temat_zgloszenia = models.CharField(max_length=400, unique=False)
     opis_zgloszenia = models.TextField()
     zglaszajacy = models.ForeignKey(Autor, on_delete=models.CASCADE)
+    rodzaj_usterki = models.ForeignKey(RodzajUsterki, on_delete=models.CASCADE, default=1)
+    urzadzenie = models.ForeignKey(Urzadzenie, on_delete=models.CASCADE, default=1)
+    status = models.ForeignKey(Status, on_delete=models.CASCADE, default=1)
+    data_otwarcia = models.DateField('data otwarcia')
+    czas_otwarcia = models.TimeField('czas otwarcia')
+    serwisant = models.ForeignKey(Serwisant, on_delete=models.CASCADE, default=1)
+    data_zamkniecia = models.DateField('data zamknięcia')
+    czas_zamkniecia = models.TimeField('czas zamknięcia')
 
     def __str__(self):
         return self.temat_zgloszenia

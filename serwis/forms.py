@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie
+from .models import RodzajUsterki, Urzadzenie, Serwisant, Status, Zgloszenie
 
 
 class RodzajUsterkiForm(ModelForm):
@@ -40,4 +40,13 @@ class ZgloszeniForm(ModelForm):
             'temat_zgloszenia',
             'opis_zgloszenia',
             'zglaszajacy',
+        ]
+
+
+class StatusForm(ModelForm):
+    class Meta:
+        model = Status
+        fields = [
+            'nazwa',
+            'aktywny'
         ]
