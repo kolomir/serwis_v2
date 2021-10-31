@@ -80,6 +80,18 @@ def nowy_serwisant(request):
 
 
 #---------------------------------------------------
+#  Wpisy
+#---------------------------------------------------
+def wpisy(request):
+    zgloszenia = Zgloszenie.objects.filter(status=1).order_by('data_zgloszenia', 'czas_zgloszenia')
+
+    context = {
+        'zgloszenia': zgloszenia
+    }
+    return render(request, 'serwis/wpisy.html', context)
+
+
+#---------------------------------------------------
 #  Formularz nowego zgłoszenia
 #---------------------------------------------------
 #@login_required
