@@ -1,0 +1,27 @@
+{% extends 'serwis/base.html' %}
+{% load bootstrap %}
+{% block content %}
+    <div class="card col-md-12 my-1 mx-auto text-white green darken-1">
+        <div class="card-body">
+            <h2>Zalogij się</h2>
+        </div>
+    </div>
+    <div class="card col-md-12 my-1 mx-auto">
+        <div class="card-body">
+            <form method="post" role="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="md-form md-outline">
+                    <label for="id_username">Użytkownik</label>
+                    <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" class=" form-control" required="" id="id_username" placeholder="Użytkownik">
+                </div>
+                <div class="md-form md-outline">
+                    <input type="password" name="password" autocomplete="current-password" class=" form-control" required="" id="id_password" placeholder="Hasło">
+                    <label for="id_password">Hasło</label>
+                </div>
+                <div class="md-form md-outline">
+                    <button type="submit" class="btn btn-primary">Zapisz <i class="fas fa-save fa-lg"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

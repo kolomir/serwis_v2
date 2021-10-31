@@ -3,6 +3,9 @@ from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie
 from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm
 from datetime import datetime
 from django.utils import timezone
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
@@ -167,6 +170,36 @@ def nowe_zgloszenie(request):
     #return render(request, 'serwis/test.html', context)
 
 
+#---------------------------------------------------
+#  Formularz logowania
+#---------------------------------------------------
+def login_request(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info( request, f"Witaj {username}! Właśnie się zalogowałeś.")
+                return redirect("/")
+            else:
+                messages.error(request, f"Błędny login lub hasło")
+        else:
+            messages.error(request, f"- Błędny login lub hasło -")
+    form = AuthenticationForm()
+
+    context = {
+        "form": form
+    }
+    return render(request, "serwis/login.html", context)
+
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "Właśnie się wylogowałeś")
+    return redirect(nowe_zgloszenie)
 
 
 
