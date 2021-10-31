@@ -83,20 +83,55 @@ def nowy_serwisant(request):
 def nowe_zgloszenie(request):
     form_zgloszenie = ZgloszeniForm(request.POST or None, request.FILES or None)
     rodzaj_usterki = RodzajUsterki.objects.filter(aktywny=True).order_by('rodzaj_usterki')
+    urzadzenie = Urzadzenie.objects.filter(aktywny=True).order_by('nazwa_urzadzenia')
+    serwisant = Serwisant.objects.filter(aktywny=True).order_by('nr_serwisanta')
+    zglaszajacy3 = get_author(request.user)
+    zgloszenia = Zgloszenie.objects.filter(zglaszajacy=zglaszajacy3).order_by('data_zgloszenia')
 
     data_zgl = request.POST.get('data_zgloszenia')
+    czas_zgl = request.POST.get('czas_zgloszenia')
     temat = request.POST.get('temat_zgloszenia')
     opis = request.POST.get('opis_zgloszenia')
-    czas_zgl = request.POST.get('czas_zgloszenia')
+    zglaszajacy2 = get_author(request.user)
+    usterka = request.POST.get('rodzaj_usterki')
+    if usterka is None:
+        usterka1 = 'Nie wybrano maszyny'
+    else:
+        usterka1 = RodzajUsterki.objects.get(id=usterka)
+    maszyna = request.POST.get('urzadzenie')
+    if maszyna is None:
+        maszyna1 = 'Nie wybrano maszyny'
+    else:
+        maszyna1 = Urzadzenie.objects.get(id=maszyna)
+    status1 = 1
+    #--------------------------------------------------------------------------------
+    data_otwarcia1 = '1900-01-01'
+    czas_otwarcia1 = '00:00'
+    serwisant1 = 1
+    data_zamkniecia1 = '1900-01-01'
+    czas_zamkniecia1 = '00:00'
 
 #- STREFA TESTU ----------------------------------------------------------------------
-    print('temat --> ', temat)
-    print('opis --> ', opis)
     print('data --> ', data_zgl)
     print('czas --> ', czas_zgl)
-
-    zglaszajacy2 = get_author(request.user)
+    print('temat --> ', temat)
+    print('opis --> ', opis)
     print('zglaszajacy --> ', zglaszajacy2)
+    print('Usterka --> ', usterka)
+    print('Usterka1 --> ', usterka1)
+    print('urzadzenie --> ', maszyna)
+    print('urzadzenie1 --> ', maszyna1)
+    if status1 is not None and int(status1) == 1:
+        print('status --> Nowy')
+    else:
+        print('status --> Nieznany')
+    print('-------------------------------------------')
+    print('data_otwarcia --> ', data_otwarcia1)
+    print('czas_otwarcia --> ', czas_otwarcia1)
+    print('serwisant --> ', serwisant1)
+    print('data_zamkniecia --> ', data_zamkniecia1)
+    print('czas_zamkniecia --> ', czas_zamkniecia1)
+
 
     data_teraz = datetime.now()
     data_zgloszenia = data_teraz.strftime("%Y-%m-%d")
@@ -106,8 +141,17 @@ def nowe_zgloszenie(request):
 #------------------------------------------------------------------------------------
 
     if form_zgloszenie.is_valid():
-        zglaszajacy = get_author(request.user)
-        #form_zgloszenie.save()
+        autor = get_author(request.user)
+        form_zgloszenie.instance.data_otwarcia = data_otwarcia1
+        form_zgloszenie.instance.czas_otwarcia = czas_otwarcia1
+        form_zgloszenie.instance.Serwisant = serwisant1
+        form_zgloszenie.instance.data_zamkniecia = data_zamkniecia1
+        form_zgloszenie.instance.czas_zamkniecia = czas_zamkniecia1
+        form_zgloszenie.instance.Status = status1
+        form_zgloszenie.instance.zglaszajacy = autor
+        form_zgloszenie.instance.data_zgloszenia = request.POST.get('data_zgloszenia')
+        form_zgloszenie.instance.czas_zgloszenia = request.POST.get('czas_zgloszenia')
+        form_zgloszenie.save()
         return redirect(nowe_zgloszenie)
 
     context = {
@@ -115,8 +159,12 @@ def nowe_zgloszenie(request):
         'data_zgloszenia': data_zgloszenia,
         'czas_zgloszenia': czas_zgloszenia,
         'rodzaj_usterki': rodzaj_usterki,
+        'urzadzenie': urzadzenie,
+        'serwisant': serwisant,
+        'zgloszenia': zgloszenia,
     }
     return render(request, 'serwis/nowe_zgloszenie.html', context)
+    #return render(request, 'serwis/test.html', context)
 
 
 

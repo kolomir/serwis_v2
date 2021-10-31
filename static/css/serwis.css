@@ -10,3 +10,7 @@ input[type=checkbox] {
     padding-top: 0rem;
 }
 
+.md-outline.select-wrapper+label {
+top: .5em !important;
+z-index: 2 !important;
+}

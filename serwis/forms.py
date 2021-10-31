@@ -36,10 +36,10 @@ class ZgloszeniForm(ModelForm):
     class Meta:
         model = Zgloszenie
         fields = [
-            'data_zgloszenia',
             'temat_zgloszenia',
             'opis_zgloszenia',
-            'zglaszajacy',
+            'rodzaj_usterki',
+            'urzadzenie',
         ]
 
 

@@ -19,8 +19,8 @@
                     <label for="textarea_opis">Opis zgłoszenia</label>
                 </div>
                 <div class="md-form md-outline">
-                    <select name="rodzaj_usterki" class="mdb-select md-form" id="combo_rodzaj" required  searchable="Szukaj...">
-                        <option value="" disabled selected>Wybierz rodzaj usterki</option>
+                    <select name="rodzaj_usterki" class="mdb-select md-form md-outline colorful-select dropdown-primary" id="combo_rodzaj" required  searchable="Szukaj...">
+                        <option value="0" disabled selected>Wybierz rodzaj usterki</option>
                         {% for result in rodzaj_usterki %}
                         <option value="{{ result.id }}">{{ result.rodzaj_usterki }}</option>
                         {% endfor %}
@@ -28,11 +28,76 @@
                     <label for="combo_rodzaj">Rodzaj Usterki</label>
                 </div>
                 <div class="md-form md-outline">
+                    <select name="urzadzenie" class="mdb-select md-form" id="combo_urzadzenie" required  searchable="Szukaj...">
+                        <option value="0" disabled selected>Wybierz urządzenie</option>
+                        {% for result in urzadzenie %}
+                        <option value="{{ result.id }}">{{ result.nazwa_urzadzenia }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="combo_urzadzenie">Urządzenie</label>
+                </div>
+                <div class="md-form md-outline">
+                    <input type="hidden" id="status_text" name="status" value=1>
+                    <input type="hidden" id="serwisant_text" name="serwisant" value=1>
                     <input type="hidden" id="data_zgloszenia_text" name="data_zgloszenia" value={{ data_zgloszenia }}>
                     <input type="hidden" id="czas_zgloszenia_text" name="czas_zgloszenia" value={{ czas_zgloszenia }}>
                     <button type="submit" class="btn btn-primary">Zapisz <i class="fas fa-save fa-lg"></i></button>
                 </div>
             </form>
+        </div>
+    </div>
+    <div class="card col-md-12 my-1 mx-auto text-white green darken-1">
+        <div class="card-body">
+            <h2>Twoje zgłoszenia</h2>
+        </div>
+    </div>
+    <div class="card col-md-12 my-1 mx-auto">
+        <div class="card-body">
+            <table id="dtUrzadzenia" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
+                <thead class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Serwisant</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for wpis in zgloszenia %}
+                    <tr>
+                        <th scope="row">{{ wpis.id }}</th>
+                        <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
+                        <td>{{ wpis.temat_zgloszenia }}</td>
+                        <td>{{ wpis.urzadzenie }}</td>
+                        <td>{{ wpis.status }}</td>
+                        <td>{{ wpis.serwisant }}</td>
+                        {% if user.is_authenticated %}
+                        <td>
+
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Serwisant</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 {% endblock content %}

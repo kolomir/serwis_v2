@@ -33,7 +33,7 @@ class Serwisant(models.Model):
     aktywny = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.nr_serwisanta
+        return str(self.nr_serwisanta)
 
 class Status(models.Model):
     nazwa = models.CharField(max_length=40, unique=True)
@@ -44,19 +44,19 @@ class Status(models.Model):
 
 
 class Zgloszenie(models.Model):
-    data_zgloszenia = models.DateField('data zgłoszenia')
-    czas_zgloszenia = models.TimeField('czas zgłoszenia')
-    temat_zgloszenia = models.CharField(max_length=400, unique=False)
-    opis_zgloszenia = models.TextField()
-    zglaszajacy = models.ForeignKey(Autor, on_delete=models.CASCADE)
-    rodzaj_usterki = models.ForeignKey(RodzajUsterki, on_delete=models.CASCADE, default=1)
-    urzadzenie = models.ForeignKey(Urzadzenie, on_delete=models.CASCADE, default=1)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE, default=1)
-    data_otwarcia = models.DateField('data otwarcia')
-    czas_otwarcia = models.TimeField('czas otwarcia')
-    serwisant = models.ForeignKey(Serwisant, on_delete=models.CASCADE, default=1)
-    data_zamkniecia = models.DateField('data zamknięcia')
-    czas_zamkniecia = models.TimeField('czas zamknięcia')
+    data_zgloszenia = models.DateField('data zgłoszenia')                                       #| <-- Etap I - Zgłoszenie
+    czas_zgloszenia = models.TimeField('czas zgłoszenia')                                       #| <-- Etap I - Zgłoszenie
+    temat_zgloszenia = models.CharField(max_length=400, unique=False)                           #| <-- Etap I - Zgłoszenie
+    opis_zgloszenia = models.TextField()                                                        #| <-- Etap I - Zgłoszenie
+    zglaszajacy = models.ForeignKey(Autor, on_delete=models.CASCADE)                            #| <-- Etap I - Zgłoszenie
+    rodzaj_usterki = models.ForeignKey(RodzajUsterki, on_delete=models.CASCADE, default=1)      #| <-- Etap I - Zgłoszenie  | <-- Etap II - Przydzielenie
+    urzadzenie = models.ForeignKey(Urzadzenie, on_delete=models.CASCADE, default=1)             #| <-- Etap I - Zgłoszenie
+    status = models.ForeignKey(Status, on_delete=models.CASCADE, default=1)                     #| <-- Etap I - Zgłoszenie  | <-- Etap II - Przydzielenie
+    data_otwarcia = models.DateField('data otwarcia')                                           #                           | <-- Etap II - Przydzielenie
+    czas_otwarcia = models.TimeField('czas otwarcia')                                           #                           | <-- Etap II - Przydzielenie
+    serwisant = models.ForeignKey(Serwisant, on_delete=models.CASCADE, default=1)               #                           | <-- Etap II - Przydzielenie
+    data_zamkniecia = models.DateField('data zamknięcia')                                       #                                                           | <-- Etap III - Zamknięcie
+    czas_zamkniecia = models.TimeField('czas zamknięcia')                                       #                                                           | <-- Etap III - Zamknięcie
 
     def __str__(self):
         return self.temat_zgloszenia

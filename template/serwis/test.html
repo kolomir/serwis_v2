@@ -1,0 +1,25 @@
+{% extends 'serwis/base.html' %}
+{% load bootstrap %}
+{% block content %}
+    <div class="card col-md-12 my-1 mx-auto text-white green darken-1">
+        <div class="card-body">
+            <h2>Nowe Zgłoszenie</h2>
+        </div>
+    </div>
+    <div class="card col-md-12 my-1 mx-auto">
+        <div class="card-body">
+            <form method="post" role="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form_zgloszenie.as_p }}
+
+                <div class="md-form md-outline">
+                    <input type="hidden" id="status_text" name="status" value=1>
+                    <input type="hidden" id="serwisant_text" name="serwisant" value=1>
+                    <input type="hidden" id="data_zgloszenia_text" name="data_zgloszenia" value={{ data_zgloszenia }}>
+                    <input type="hidden" id="czas_zgloszenia_text" name="czas_zgloszenia" value={{ czas_zgloszenia }}>
+                    <button type="submit" class="btn btn-primary">Zapisz <i class="fas fa-save fa-lg"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
