@@ -4,7 +4,7 @@ from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Status, Zglosze
 
 @admin.register(Autor)
 class AutorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user',)
+    list_display = ('id', 'user', 'serwis', 'aktywny')
     list_filter = ('aktywny',)
 
 
@@ -38,6 +38,6 @@ class StatusAdmin(admin.ModelAdmin):
 
 @admin.register(Zgloszenie)
 class ZgloszenieAdmin(admin.ModelAdmin):
-    list_display = ('id', 'temat_zgloszenia', 'data_zgloszenia', 'zglaszajacy', 'rodzaj_usterki', 'urzadzenie', 'status')
-    list_filter = ('zglaszajacy', 'rodzaj_usterki', 'urzadzenie', 'status')
-    search_fields = ('id', 'temat_zgloszenia', 'data_zgloszenia', 'zglaszajacy', 'rodzaj_usterki', 'urzadzenie', 'status')
+    list_display = ('id', 'temat_zgloszenia', 'data_zgloszenia', 'rodzaj_usterki', 'urzadzenie', 'status')
+    list_filter = ('rodzaj_usterki', 'urzadzenie', 'status')
+    search_fields = ('id', 'temat_zgloszenia', 'data_zgloszenia', 'rodzaj_usterki', 'urzadzenie', 'status')

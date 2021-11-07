@@ -22,4 +22,13 @@
             </form>
         </div>
     </div>
+
+    {% for result in qs %}
+    {{ result.id }} {{ result.username }}<br />
+    {% endfor %}
+    -------------------------------------------<br />
+    {% for result in serwis %}
+    {{ result.id }} {{ result.user }} {{ result.serwis }}<br />
+    {% endfor %}
+
 {% endblock content %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie
 from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm
 from datetime import datetime
@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 
 
 #---------------------------------------------------
@@ -22,7 +23,7 @@ def get_author(user):
 #---------------------------------------------------
 #  Formularze Rodzajów Usterek
 #---------------------------------------------------
-#@login_required
+@login_required
 def nowy_RodzajUsterek(request):
     form_RodzajUsterki = RodzajUsterkiForm(request.POST or None, request.FILES or None)
     rodzaj_usterki = RodzajUsterki.objects.all().order_by('rodzaj_usterki')
@@ -41,7 +42,7 @@ def nowy_RodzajUsterek(request):
 #---------------------------------------------------
 #  Formularz do wprowadzania Maszyn i Urządzeń do bazy
 #---------------------------------------------------
-#@login_required
+@login_required
 def nowe_Urzadzenie(request):
     form_Urzadzenia = UrzadzenieForm(request.POST or None, request.FILES or None)
     urzadzenia = Urzadzenie.objects.all().order_by('nazwa_urzadzenia')
@@ -61,108 +62,90 @@ def nowe_Urzadzenie(request):
 
 
 #---------------------------------------------------
-#  Formularz do serwisantów
-#---------------------------------------------------
-#@login_required
-def nowy_serwisant(request):
-    form_serwisant = SerwisantForm(request.POST or None, request.FILES or None)
-    serwisant = Serwisant.objects.all().order_by('nazwisko')
-
-    if form_serwisant.is_valid():
-        form_serwisant.save()
-        return redirect(nowy_serwisant)
-
-    context = {
-        'form_serwisant': form_serwisant,
-        'serwisant': serwisant,
-    }
-    return render(request, 'serwis/nowy_serwisant.html', context)
-
-
-#---------------------------------------------------
 #  Wpisy
 #---------------------------------------------------
 def wpisy(request):
     zgloszenia = Zgloszenie.objects.filter(status=1).order_by('data_zgloszenia', 'czas_zgloszenia')
+    #- czy serwisant ---------
+    zglaszajacy_wpisy = get_author(request.user)
+    lista_userow = get_user_model()
+    zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
+    serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
+    wyslij = int(serwisy.serwis)
 
     context = {
-        'zgloszenia': zgloszenia
+        'zgloszenia': zgloszenia,
+        'wyslij': wyslij,
     }
     return render(request, 'serwis/wpisy.html', context)
 
 
 #---------------------------------------------------
+#  Wpis - szczegóły
+#---------------------------------------------------
+@login_required
+def wpis_szczegoly(request, id):
+    zgloszenia = get_object_or_404(Zgloszenie, pk=id)
+    #zgloszenia = Zgloszenie.objects.filter(id__exact=id)
+    #- czy serwisant ---------
+    zglaszajacy_wpisy = get_author(request.user)
+    lista_userow = get_user_model()
+    zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
+    serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
+    wyslij = int(serwisy.serwis)
+
+    print('zgloszenia', zgloszenia.status)
+
+    context = {
+        'zgloszenia': zgloszenia,
+        'wyslij': wyslij,
+    }
+    return render(request, 'serwis/zgloszenie.html', context)
+
+
+#---------------------------------------------------
 #  Formularz nowego zgłoszenia
 #---------------------------------------------------
-#@login_required
+@login_required
 def nowe_zgloszenie(request):
     form_zgloszenie = ZgloszeniForm(request.POST or None, request.FILES or None)
     rodzaj_usterki = RodzajUsterki.objects.filter(aktywny=True).order_by('rodzaj_usterki')
     urzadzenie = Urzadzenie.objects.filter(aktywny=True).order_by('nazwa_urzadzenia')
-    serwisant = Serwisant.objects.filter(aktywny=True).order_by('nr_serwisanta')
-    zglaszajacy3 = get_author(request.user)
-    zgloszenia = Zgloszenie.objects.filter(zglaszajacy=zglaszajacy3).order_by('data_zgloszenia')
+    zglaszajacy_wpisy = get_author(request.user)
+    zgloszenia = Zgloszenie.objects.filter(status__lt=5, zglaszajacy__exact=zglaszajacy_wpisy)
+    #- czy serwisant ---------
+    lista_userow = get_user_model()
+    zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
+    serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
+    wyslij = int(serwisy.serwis)
 
+
+    #-STREFA TESTU ---------------------------------------------------
     data_zgl = request.POST.get('data_zgloszenia')
     czas_zgl = request.POST.get('czas_zgloszenia')
     temat = request.POST.get('temat_zgloszenia')
     opis = request.POST.get('opis_zgloszenia')
     zglaszajacy2 = get_author(request.user)
-    usterka = request.POST.get('rodzaj_usterki')
-    if usterka is None:
-        usterka1 = 'Nie wybrano maszyny'
-    else:
-        usterka1 = RodzajUsterki.objects.get(id=usterka)
-    maszyna = request.POST.get('urzadzenie')
-    if maszyna is None:
-        maszyna1 = 'Nie wybrano maszyny'
-    else:
-        maszyna1 = Urzadzenie.objects.get(id=maszyna)
-    status1 = 1
-    #--------------------------------------------------------------------------------
-    data_otwarcia1 = '1900-01-01'
-    czas_otwarcia1 = '00:00'
-    serwisant1 = 1
-    data_zamkniecia1 = '1900-01-01'
-    czas_zamkniecia1 = '00:00'
 
-#- STREFA TESTU ----------------------------------------------------------------------
+    print('--- TEST -------------------------------------------')
     print('data --> ', data_zgl)
     print('czas --> ', czas_zgl)
     print('temat --> ', temat)
     print('opis --> ', opis)
     print('zglaszajacy --> ', zglaszajacy2)
-    print('Usterka --> ', usterka)
-    print('Usterka1 --> ', usterka1)
-    print('urzadzenie --> ', maszyna)
-    print('urzadzenie1 --> ', maszyna1)
-    if status1 is not None and int(status1) == 1:
-        print('status --> Nowy')
-    else:
-        print('status --> Nieznany')
-    print('-------------------------------------------')
-    print('data_otwarcia --> ', data_otwarcia1)
-    print('czas_otwarcia --> ', czas_otwarcia1)
-    print('serwisant --> ', serwisant1)
-    print('data_zamkniecia --> ', data_zamkniecia1)
-    print('czas_zamkniecia --> ', czas_zamkniecia1)
+    print('obj --> ', zalogowany_user.id)
+    print('obj2 --> ', serwisy.serwis)
+    print('wyslij --> ', wyslij)
 
+    #-----------------------------------------------------------------
 
     data_teraz = datetime.now()
     data_zgloszenia = data_teraz.strftime("%Y-%m-%d")
     czas_teraz = timezone.now()
     czas_zgloszenia = czas_teraz.strftime("%H:%M")
 
-#------------------------------------------------------------------------------------
-
     if form_zgloszenie.is_valid():
         autor = get_author(request.user)
-        form_zgloszenie.instance.data_otwarcia = data_otwarcia1
-        form_zgloszenie.instance.czas_otwarcia = czas_otwarcia1
-        form_zgloszenie.instance.Serwisant = serwisant1
-        form_zgloszenie.instance.data_zamkniecia = data_zamkniecia1
-        form_zgloszenie.instance.czas_zamkniecia = czas_zamkniecia1
-        form_zgloszenie.instance.Status = status1
         form_zgloszenie.instance.zglaszajacy = autor
         form_zgloszenie.instance.data_zgloszenia = request.POST.get('data_zgloszenia')
         form_zgloszenie.instance.czas_zgloszenia = request.POST.get('czas_zgloszenia')
@@ -175,12 +158,11 @@ def nowe_zgloszenie(request):
         'czas_zgloszenia': czas_zgloszenia,
         'rodzaj_usterki': rodzaj_usterki,
         'urzadzenie': urzadzenie,
-        'serwisant': serwisant,
         'zgloszenia': zgloszenia,
+        'wyslij': wyslij,
     }
     return render(request, 'serwis/nowe_zgloszenie.html', context)
     #return render(request, 'serwis/test.html', context)
-
 
 #---------------------------------------------------
 #  Formularz logowania
@@ -214,4 +196,44 @@ def logout_request(request):
     return redirect(nowe_zgloszenie)
 
 
+#---------------------------------------------------
+#---------------------------------------------------
+#  testy
+#---------------------------------------------------
+#---------------------------------------------------
+def autorzy(request):
+    User = get_user_model()
+    qs = User.objects.all()
+    serwis = Autor.objects.all()
 
+    context = {
+        'qs': qs,
+        'serwis': serwis,
+    }
+
+    return render(request, 'serwis/test.html', context)
+
+
+
+
+
+#---------------------------------------------------
+#  Formularz do serwisantów
+#---------------------------------------------------
+#@login_required
+def nowy_serwisant(request):
+    form_serwisant = SerwisantForm(request.POST or None, request.FILES or None)
+    serwisant = Serwisant.objects.all().order_by('nazwisko')
+    User = get_user_model()
+    uzytkownik = User.objects.all()
+
+    if form_serwisant.is_valid():
+        form_serwisant.save()
+        return redirect(nowy_serwisant)
+
+    context = {
+        'form_serwisant': form_serwisant,
+        'serwisant': serwisant,
+        'uzytkownik': uzytkownik,
+    }
+    return render(request, 'serwis/nowy_serwisant.html', context)

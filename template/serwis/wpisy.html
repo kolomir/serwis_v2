@@ -33,7 +33,10 @@
                         <td>{{ wpis.serwisant }}</td>
                         {% if user.is_authenticated %}
                         <td>
-
+                            <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Szczegóły</a>
+                            {% if wyslij == 1 %}
+                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Podejmij</a>
+                            {% endif %}
                         </td>
                         {% endif %}
                     </tr>
@@ -53,6 +56,10 @@
                     </tr>
                 </tfoot>
             </table>
+                    -- {{ wyslij }} --
+                    {% if serwisy == 1 %}
+                        123456
+                    {% endif %}
         </div>
     </div>
 {% endblock content %}
