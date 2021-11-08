@@ -14,3 +14,11 @@ input[type=checkbox] {
 top: .5em !important;
 z-index: 2 !important;
 }
+
+/* -- kolory wypełnień -- */
+
+.bg-opis {
+    background-color: #3F729B;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
