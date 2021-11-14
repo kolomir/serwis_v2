@@ -3,12 +3,12 @@
 {% block content %}
     <div class="card col-md-12 my-1 mx-auto text-white green darken-1">
         <div class="card-body">
-            <h2>Zgłoszenia</h2>
+            <h2>Nowe zgłoszenia</h2>
         </div>
     </div>
     <div class="card col-md-12 my-1 mx-auto">
         <div class="card-body">
-            <table id="dtUrzadzenia" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
+            <table id="dtNoweWpisy" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
                 <thead class="black white-text">
                     <tr>
                         <th class="th-sm" width="5%">#</th>
@@ -56,10 +56,63 @@
                     </tr>
                 </tfoot>
             </table>
-                    -- {{ wyslij }} --
-                    {% if serwisy == 1 %}
-                        123456
-                    {% endif %}
+        </div>
+    </div>
+    <div class="card col-md-12 my-1 mx-auto text-white green darken-1">
+        <div class="card-body">
+            <h2>Twoje zgłoszenia</h2>
+        </div>
+    </div>
+    <div class="card col-md-12 my-1 mx-auto">
+        <div class="card-body">
+            <table id="dtTwojeWpisy" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
+                <thead class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Serwisant</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for wpis in twoje_zgloszenia %}
+                    <tr>
+                        <th scope="row">{{ wpis.id }}</th>
+                        <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
+                        <td>{{ wpis.temat_zgloszenia }}</td>
+                        <td>{{ wpis.urzadzenie }}</td>
+                        <td>{{ wpis.status }}</td>
+                        <td>{{ wpis.serwisant }}</td>
+                        {% if user.is_authenticated %}
+                        <td>
+                            <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Szczegóły</a>
+                            {% if wyslij == 1 %}
+                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Podejmij</a>
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Serwisant</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 {% endblock content %}

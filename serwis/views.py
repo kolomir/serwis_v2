@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie
-from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm
+from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
@@ -73,8 +73,11 @@ def wpisy(request):
     serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
     wyslij = int(serwisy.serwis)
 
+    twoje_zgloszenia = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).order_by('status','data_zgloszenia', 'czas_zgloszenia')
+
     context = {
         'zgloszenia': zgloszenia,
+        'twoje_zgloszenia': twoje_zgloszenia,
         'wyslij': wyslij,
     }
     return render(request, 'serwis/wpisy.html', context)
@@ -86,18 +89,52 @@ def wpisy(request):
 @login_required
 def wpis_szczegoly(request, id):
     zgloszenia = get_object_or_404(Zgloszenie, pk=id)
-    #zgloszenia = Zgloszenie.objects.filter(id__exact=id)
-    #- czy serwisant ---------
+    # - czy serwisant ---------
     zglaszajacy_wpisy = get_author(request.user)
     lista_userow = get_user_model()
     zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
     serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
     wyslij = int(serwisy.serwis)
+    # - forms -----------------
+    form_podjecie_zgloszenia = PodjecieZgloszeniaForm(request.POST or None, request.FILES or None, instance=zgloszenia)
 
-    print('zgloszenia', zgloszenia.status)
+    # -STREFA TESTU ---------------------------------------------------
+    data_zgl = request.POST.get('data_otwarcia')
+    czas_zgl = request.POST.get('czas_otwarcia')
+    status = request.POST.get('status')
+
+    print('--- TEST -------------------------------------------')
+    print('data --> ', data_zgl)
+    print('czas --> ', czas_zgl)
+    print('status --> ', status)
+    print('----------------------------------------------------')
+    # -----------------------------------------------------------------
+
+    data_teraz = datetime.now()
+    data_otwarcia = data_teraz.strftime("%Y-%m-%d")
+    czas_teraz = timezone.now()
+    czas_otwarcia = czas_teraz.strftime("%H:%M")
+
+    if form_podjecie_zgloszenia.is_valid():
+        autor = get_author(request.user)
+        form_podjecie_zgloszenia.instance.serwisant = autor
+        form_podjecie_zgloszenia.instance.data_otwarcia = request.POST.get('data_otwarcia')
+        form_podjecie_zgloszenia.instance.czas_otwarcia = request.POST.get('czas_otwarcia')
+        form_podjecie_zgloszenia.instance.status = int(status)
+        print(
+            'autor:', autor,
+            ' ; autor.id:', autor.id,
+            ' ; data_otwarcia:', data_otwarcia,
+            ' ; czas_otwarcia:', czas_otwarcia,
+            ' ; status:', status,)
+        form_podjecie_zgloszenia.save()
+        return redirect(wpisy)
 
     context = {
         'zgloszenia': zgloszenia,
+        'form_podjecie_zgloszenia': form_podjecie_zgloszenia,
+        'data_otwarcia': data_otwarcia,
+        'czas_otwarcia': czas_otwarcia,
         'wyslij': wyslij,
     }
     return render(request, 'serwis/zgloszenie.html', context)
@@ -163,6 +200,7 @@ def nowe_zgloszenie(request):
     }
     return render(request, 'serwis/nowe_zgloszenie.html', context)
     #return render(request, 'serwis/test.html', context)
+
 
 #---------------------------------------------------
 #  Formularz logowania

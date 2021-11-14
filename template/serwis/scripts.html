@@ -27,7 +27,14 @@
         });
 
         $(document).ready(function () {
-            $('#dtUrzadzenia').DataTable({
+            $('#dtNoweWpisy').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+        $(document).ready(function () {
+            $('#dtTwojeWpisy').DataTable({
                 "order": [[ 0, "desc" ]]
             });
             $('.dataTables_length').addClass('bs-select');

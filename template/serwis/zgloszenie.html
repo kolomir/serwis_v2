@@ -29,6 +29,19 @@
                     <div class="col-md-2 z-depth-1 align-middle bg-opis">Maszyna</div>
                     <div class="col-md-4 z-depth-1 align-middle">{{ zgloszenia.urzadzenie }}</div>
                 </div>
+                {% if wyslij == 1 %}
+                <div class="row">
+                    <div class="col-md-12 z-depth-1 align-middle">
+                        <form method="post" role="form" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" id="status_text" name="status" value=2>
+                            <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
+                            <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
+                            <button type="submit" class="btn btn-primary">Podejmij <i class="fas fa-save fa-lg"></i></button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

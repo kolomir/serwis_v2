@@ -43,6 +43,16 @@ class ZgloszeniForm(ModelForm):
         ]
 
 
+class PodjecieZgloszeniaForm(ModelForm):
+    class Meta:
+        model = Zgloszenie
+        fields = [
+            'data_otwarcia',
+            'czas_otwarcia',
+            'serwisant',
+        ]
+
+
 class StatusForm(ModelForm):
     class Meta:
         model = Status
