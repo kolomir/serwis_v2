@@ -27,6 +27,13 @@
         });
 
         $(document).ready(function () {
+            $('#dtWpisy').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+        $(document).ready(function () {
             $('#dtNoweWpisy').DataTable({
                 "order": [[ 0, "desc" ]]
             });

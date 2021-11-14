@@ -62,23 +62,40 @@ def nowe_Urzadzenie(request):
 
 
 #---------------------------------------------------
+#  Wpisy - START
+#---------------------------------------------------
+def wpis_start(request):
+    zgloszenia = Zgloszenie.objects.filter(status__lte=4).order_by('data_zgloszenia', 'czas_zgloszenia')
+
+    context = {
+        'zgloszenia': zgloszenia,
+    }
+
+    return render(request, 'serwis/start.html', context)
+
+#---------------------------------------------------
 #  Wpisy
 #---------------------------------------------------
 def wpisy(request):
     nowe_zgloszenia = Zgloszenie.objects.filter(status=1).order_by('data_zgloszenia', 'czas_zgloszenia')
     #- czy serwisant ---------
-    zglaszajacy_wpisy = get_author(request.user)
-    lista_userow = get_user_model()
-    zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
-    serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
-    wyslij = int(serwisy.serwis)
+    if request.user.is_authenticated:
+        zglaszajacy_wpisy = get_author(request.user)
+        lista_userow = get_user_model()
+        zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
+        serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
+        wyslij = int(serwisy.serwis)
+        zgloszenia_zglaszajacy = Zgloszenie.objects.filter(status__gte=2,status__lte=4).filter(zglaszajacy=zglaszajacy_wpisy.id).order_by('status')
+        zgloszenia_serwis = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).order_by('status','data_zgloszenia', 'czas_zgloszenia')
+    else:
+        zgloszenia_zglaszajacy = ""
+        zgloszenia_serwis = ""
+        wyslij = ""
 
-    #zgloszenia_zglaszajacy = Zgloszenie.objects.filter(status=2).filter(status=3).filter(status=4).filter(zglaszajacy=zglaszajacy_wpisy.id).order_by('status')
-    zgloszenia_zglaszajacy = Zgloszenie.objects.filter(status__gte=2,status__lte=4).filter(zglaszajacy=zglaszajacy_wpisy.id).order_by('status')
-
-    zgloszenia_serwis = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).order_by('status','data_zgloszenia', 'czas_zgloszenia')
+    zgloszenia = Zgloszenie.objects.filter(status__lte=4).order_by('data_zgloszenia', 'czas_zgloszenia')
 
     context = {
+        'zgloszenia': zgloszenia,
         'nowe_zgloszenia': nowe_zgloszenia,
         'zgloszenia_zglaszajacy': zgloszenia_zglaszajacy,
         'zgloszenia_serwis': zgloszenia_serwis,
