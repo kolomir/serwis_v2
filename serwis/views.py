@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie
-from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm
+from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie, Comments
+from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
@@ -95,40 +95,81 @@ def wpis_szczegoly(request, id):
     zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
     serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
     wyslij = int(serwisy.serwis)
-    # - forms -----------------
+
+    # - forms - podjęcie zgłoszenia -----------------
     form_podjecie_zgloszenia = PodjecieZgloszeniaForm(request.POST or None, request.FILES or None, instance=zgloszenia)
 
-    # -STREFA TESTU ---------------------------------------------------
+    # - forms - komentarze --------------------------
+    komentarze = Comments.objects.filter(zgloszenie=zgloszenia.id).order_by('data_wpisu')
+    form_komentarze = CommentsForm(request.POST or None, request.FILES or None)
+
+    # =================================================================
+    # - STREFA TESTU --------------------------------------------------
+    # =================================================================
     data_zgl = request.POST.get('data_otwarcia')
     czas_zgl = request.POST.get('czas_otwarcia')
     status = request.POST.get('status')
 
-    print('--- TEST -------------------------------------------')
+    data_com = request.POST.get('data_wpisu')
+    czas_com = request.POST.get('czas_wpisu')
+    tresci = request.POST.get('tresc')
+    zgloszenie_com = request.POST.get('zgloszenie')
+
+    print('--- TEST - ZGLOSZENIE ------------------------------')
+    print('----------------------------------------------------')
     print('data --> ', data_zgl)
     print('czas --> ', czas_zgl)
     print('status --> ', status)
     print('----------------------------------------------------')
+    print('--- TEST - KOMENTARZE ------------------------------')
+    print('----------------------------------------------------')
+    print('data komentarza --> ', data_com)
+    print('czas komentarza --> ', czas_com)
+    print('tersc --> ', tresci)
+    print('zgloszenie --> ', zgloszenie_com)
     # -----------------------------------------------------------------
 
     data_teraz = datetime.now()
     data_otwarcia = data_teraz.strftime("%Y-%m-%d")
     czas_teraz = timezone.now()
     czas_otwarcia = czas_teraz.strftime("%H:%M")
+    #'''
+    if request.method == 'POST' and 'btn_form_zgloszenie' in request.POST:
 
-    if form_podjecie_zgloszenia.is_valid():
-        autor = get_author(request.user)
-        form_podjecie_zgloszenia.instance.serwisant = autor
-        form_podjecie_zgloszenia.instance.data_otwarcia = request.POST.get('data_otwarcia')
-        form_podjecie_zgloszenia.instance.czas_otwarcia = request.POST.get('czas_otwarcia')
-        form_podjecie_zgloszenia.instance.status = int(status)
-        print(
-            'autor:', autor,
-            ' ; autor.id:', autor.id,
-            ' ; data_otwarcia:', data_otwarcia,
-            ' ; czas_otwarcia:', czas_otwarcia,
-            ' ; status:', status,)
-        form_podjecie_zgloszenia.save()
-        return redirect(wpisy)
+        if form_podjecie_zgloszenia.is_valid():
+            autor = get_author(request.user)
+            form_podjecie_zgloszenia.instance.serwisant = autor
+            form_podjecie_zgloszenia.instance.data_otwarcia = request.POST.get('data_otwarcia')
+            form_podjecie_zgloszenia.instance.czas_otwarcia = request.POST.get('czas_otwarcia')
+            form_podjecie_zgloszenia.instance.status = status
+            print(
+                'autor:', autor,
+                ' ; autor.id:', autor.id,
+                ' ; data_otwarcia:', data_otwarcia,
+                ' ; czas_otwarcia:', czas_otwarcia,
+                ' ; status:', status)
+            form_podjecie_zgloszenia.save()
+            return redirect(wpisy)
+    #'''
+    if request.method == 'POST':# and 'btn_form_komentarz' in request.POST:
+        # - forms - komentarze --------------------------
+        #form_komentarze = CommentsForm(request.POST or None, request.FILES or None)
+        
+        if form_komentarze.is_valid():
+            autor = get_author(request.user)
+            form_komentarze.instance.autor = autor
+            form_komentarze.instance.data_wpisu = request.POST.get('data_wpisu')
+            form_komentarze.instance.czas_wpisu = request.POST.get('czas_wpisu')
+            print(
+                '11111111111111111',
+                'autor:', autor,
+                ' ; autor.id:', autor.id,
+                ' ; data_wpisu:', data_otwarcia,
+                ' ; czas_wpisu:', czas_otwarcia,
+                ' ; tresc:', tresci,
+                ' ; zgloszenie:', zgloszenie_com)
+            form_komentarze.save()
+    #'''
 
     context = {
         'zgloszenia': zgloszenia,
@@ -136,6 +177,8 @@ def wpis_szczegoly(request, id):
         'data_otwarcia': data_otwarcia,
         'czas_otwarcia': czas_otwarcia,
         'wyslij': wyslij,
+        'komentarze': komentarze,
+        'form_komentarze': form_komentarze,
     }
     return render(request, 'serwis/zgloszenie.html', context)
 

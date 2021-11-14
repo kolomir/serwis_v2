@@ -46,11 +46,12 @@ class Status(models.Model):
 
 class Zgloszenie(models.Model):
     STATUS_RODZAJ = {
-        (1, 'Nowy'),
-        (2, 'Otwarty'),
-        (3, 'Czeka na wyjaśnienie'),
-        (4, 'Zamknięty'),
-        (5, 'Anulowany')
+        (1, 'Nowy'),                    #| <- Start projektu
+        (2, 'Otwarty'),                 #| <- Przyjęcie lub przydzielenie zadania dla serwisanta
+        (3, 'Czeka na wyjaśnienie'),    #| <- Aby zawiesić zgłoszenie - wybiera serwisant
+        (4, 'Wykonany'),                #| <- Sygnalizacja przez serwisanta że zadanie zostało wykonane
+        (5, 'Zamknięty'),               #| <- Zamyka całość zleceniodawca gdy serwisant zaznaczył status na WYKONANE
+        (6, 'Anulowany')                #| <- Anulowanie zadania przez zamawiającego lub przełożonego
     }
 
     data_zgloszenia = models.DateField('data zgłoszenia')                                                           #| <-- Etap I - Zgłoszenie
@@ -70,3 +71,15 @@ class Zgloszenie(models.Model):
 
     def __str__(self):
         return self.temat_zgloszenia
+
+
+class Comments(models.Model):
+    data_wpisu = models.DateField('data wpisu')
+    czas_wpisu = models.TimeField('czas wpisu')
+    zgloszenie = models.ForeignKey(Zgloszenie, on_delete=models.CASCADE)
+    autor = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='autor')
+    tresc = models.TextField()
+
+    def __str__(self):
+        return str(self.data_wpisu)
+

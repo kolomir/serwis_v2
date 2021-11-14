@@ -1,7 +1,15 @@
 from django.forms import ModelForm
 from django import forms
-from .models import RodzajUsterki, Urzadzenie, Serwisant, Status, Zgloszenie
+from .models import RodzajUsterki, Urzadzenie, Serwisant, Status, Zgloszenie, Comments
 
+
+class CommentsForm(ModelForm):
+    class Meta:
+        model = Comments
+        fields = [
+            'zgloszenie',
+            'tresc'
+        ]
 
 class RodzajUsterkiForm(ModelForm):
     class Meta:

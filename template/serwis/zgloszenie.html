@@ -29,6 +29,7 @@
                     <div class="col-md-2 z-depth-1 align-middle bg-opis">Maszyna</div>
                     <div class="col-md-4 z-depth-1 align-middle">{{ zgloszenia.urzadzenie }}</div>
                 </div>
+                {% if zgloszenia.status == 1 %}
                 {% if wyslij == 1 %}
                 <div class="row">
                     <div class="col-md-12 z-depth-1 align-middle">
@@ -37,11 +38,45 @@
                             <input type="hidden" id="status_text" name="status" value=2>
                             <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
                             <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
-                            <button type="submit" class="btn btn-primary">Podejmij <i class="fas fa-save fa-lg"></i></button>
+                            <button type="submit" class="btn btn-primary" name="btn_form_zgloszenie">Podejmij <i class="fas fa-save fa-lg"></i></button>
                         </form>
                     </div>
                 </div>
                 {% endif %}
+                {% endif %}
+            </div>
+            <hr />
+            <div class="container">
+                <div class="row">
+                    {% if zgloszenia.status == 2 or zgloszenia.status == 3 %}
+                    <form method="post" role="form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="md-form md-outline">
+                            <textarea id="textarea_tresc" class="md-textarea form-control" rows="5" cols="160" name="tresc"></textarea>
+                            <label for="textarea_tresc">Działanie</label>
+                        </div>
+                        <input type="hidden" id="data_wpisu_text" name="data_wpisu" value={{ data_otwarcia }}>
+                        <input type="hidden" id="czas_wpisu_text" name="czas_wpisu" value={{ czas_otwarcia }}>
+                        <input type="hidden" id="zgloszenie_text" name="zgloszenie" value={{ zgloszenia.id }}>
+                        <button type="submit" class="btn btn-primary" name="btn_form_komentarz">Zapisz <i class="fas fa-save fa-lg"></i></button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            <hr />
+            <div class="container">
+                {% for wpis in komentarze %}
+                <div class="row">
+                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Napisał</div>
+                    <div class="col-md-4 z-depth-1 align-middle">{{ wpis.autor }}</div>
+                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Data/godzina</div>
+                    <div class="col-md-4 z-depth-1 align-middle">{{ wpis.data_wpisu }} {{ wpis.czas_wpisu }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Treść</div>
+                    <div class="col-md-10 z-depth-1 align-middle">{{ wpis.tresc }}</div>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
