@@ -34,7 +34,14 @@
         });
 
         $(document).ready(function () {
-            $('#dtTwojeWpisy').DataTable({
+            $('#dtTwojeWpisy_serwis').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+
+        $(document).ready(function () {
+            $('#dtTwojeWpisy_autor').DataTable({
                 "order": [[ 0, "desc" ]]
             });
             $('.dataTables_length').addClass('bs-select');

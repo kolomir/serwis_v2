@@ -65,7 +65,7 @@ def nowe_Urzadzenie(request):
 #  Wpisy
 #---------------------------------------------------
 def wpisy(request):
-    zgloszenia = Zgloszenie.objects.filter(status=1).order_by('data_zgloszenia', 'czas_zgloszenia')
+    nowe_zgloszenia = Zgloszenie.objects.filter(status=1).order_by('data_zgloszenia', 'czas_zgloszenia')
     #- czy serwisant ---------
     zglaszajacy_wpisy = get_author(request.user)
     lista_userow = get_user_model()
@@ -73,11 +73,15 @@ def wpisy(request):
     serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
     wyslij = int(serwisy.serwis)
 
-    twoje_zgloszenia = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).order_by('status','data_zgloszenia', 'czas_zgloszenia')
+    #zgloszenia_zglaszajacy = Zgloszenie.objects.filter(status=2).filter(status=3).filter(status=4).filter(zglaszajacy=zglaszajacy_wpisy.id).order_by('status')
+    zgloszenia_zglaszajacy = Zgloszenie.objects.filter(status__gte=2,status__lte=4).filter(zglaszajacy=zglaszajacy_wpisy.id).order_by('status')
+
+    zgloszenia_serwis = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).order_by('status','data_zgloszenia', 'czas_zgloszenia')
 
     context = {
-        'zgloszenia': zgloszenia,
-        'twoje_zgloszenia': twoje_zgloszenia,
+        'nowe_zgloszenia': nowe_zgloszenia,
+        'zgloszenia_zglaszajacy': zgloszenia_zglaszajacy,
+        'zgloszenia_serwis': zgloszenia_serwis,
         'wyslij': wyslij,
     }
     return render(request, 'serwis/wpisy.html', context)
