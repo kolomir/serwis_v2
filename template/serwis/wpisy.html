@@ -195,9 +195,6 @@
                             <th class="th-sm">Maszyna</th>
                             <th class="th-sm">Status</th>
                             <th class="th-sm">Serwisant</th>
-                            {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
-                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -209,14 +206,6 @@
                             <td>{{ wpis.urzadzenie }}</td>
                             <td>{{ wpis.status }}</td>
                             <td>{{ wpis.serwisant }}</td>
-                            {% if user.is_authenticated %}
-                            <td>
-                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Szczegóły</a>
-                                {% if wyslij == 1 %}
-                                    <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Podejmij</a>
-                                {% endif %}
-                            </td>
-                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -228,9 +217,6 @@
                             <th class="th-sm">Maszyna</th>
                             <th class="th-sm">Status</th>
                             <th class="th-sm">Serwisant</th>
-                            {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
-                            {% endif %}
                         </tr>
                     </tfoot>
                 </table>

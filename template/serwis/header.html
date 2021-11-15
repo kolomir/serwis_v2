@@ -1,3 +1,4 @@
+{% load static %}
         <header>
         <!-- SideNav slide-out button -->
             <a href="#" data-activates="slide-out" class="btn btn-dark p-3 button-collapse"><i class="fas fa-bars"></i></a>
@@ -8,7 +9,7 @@
                 <!-- Logo -->
                     <li>
                         <div class="logo-wrapper waves-light">
-                            <a href="#"><img src="https://mdbootstrap.com/img/logo/mdb-transparent.png" class="img-fluid flex-center"></a>
+                            <a href="/"><img src="{% static 'img/logo.png' %}" class="img-fluid flex-center"></a>
                         </div>
                     </li>
                 <!--/. Logo -->
@@ -18,12 +19,16 @@
                             <li>
                                 <a href="/" class="collapsible-header waves-effect"><i class="fas fa-list"></i> Wpisy</a>
                             </li>
+                            {% if user.is_authenticated %}
                             <li>
                                 <a href="/nowe_zgloszenie" class="collapsible-header waves-effect"><i class="fas fa-plus"></i> Nowe zgłoszenie</a>
                             </li>
+                            {% endif %}
                         </ul>
                     </li>
                     <hr />
+                    {% if user.is_authenticated %}
+                    {% if wyslij == 1 %}
                     <li>
                         <ul class="collapsible collapsible-accordion">
                             <li>
@@ -35,16 +40,8 @@
                         </ul>
                     </li>
                     <hr />
-                    <li>
-                        <ul class="collapsible collapsible-accordion">
-                            <li>
-                                <a href="/nowy_serwisant" class="collapsible-header waves-effect"><i class="far fa-envelope"></i> Serwisant (raczej niepotrzebne)</a>
-                            </li>
-                            <li>
-                                <a href="/test" class="collapsible-header waves-effect"><i class="far fa-envelope"></i> test</a>
-                            </li>
-                        </ul>
-                    </li>
+                    {% endif %}
+                    {% endif %}
                 <!--/. Side navigation links -->
                 </ul>
                 <div class="sidenav-bg"></div>
