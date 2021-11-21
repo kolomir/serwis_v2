@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie, Comments
-from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm
+from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm, AnulowacZgloszenie
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 
 
 #---------------------------------------------------
-# pobieranie informacji o osobie zalogowaniej
+# pobieranie informacji o osobie zalogowaniej.
 #---------------------------------------------------
 def get_author(user):
     qs = Autor.objects.filter(user=user)
@@ -264,6 +264,37 @@ def nowe_zgloszenie(request):
     }
     return render(request, 'serwis/nowe_zgloszenie.html', context)
     #return render(request, 'serwis/test.html', context)
+
+
+#---------------------------------------------------
+#  Formularz nowego zgłoszenia
+#---------------------------------------------------
+@login_required
+def anuluj_zgloszenie(request, id):
+    wpis = get_object_or_404(Zgloszenie, pk=id)
+    form_wpis = AnulowacZgloszenie(request.POST or None, request.FILES or None, instance=wpis)
+
+    data_teraz = datetime.now()
+    data_zamkniecia = data_teraz.strftime("%Y-%m-%d")
+    czas_teraz = timezone.now()
+    czas_zamkniecia = czas_teraz.strftime("%H:%M")
+    status = 6
+
+    if form_wpis.is_valid():
+        #kasuj = form_wpis.save(commit=False)
+        form_wpis.instance.status = status
+        form_wpis.instance.data_zgloszenia = request.POST.get('data_zamkniecia')
+        form_wpis.instance.czas_zgloszenia = request.POST.get('czas_zamkniecia')
+        form_wpis.save()
+        return redirect(wpisy)
+
+
+    context = {
+        'wpis': wpis,
+        'data_zamkniecia': data_zamkniecia,
+        'czas_zamkniecia': czas_zamkniecia,
+    }
+    return render(request, 'serwis/potwierdz_anuluj_zgloszenie.html', context)
 
 
 #---------------------------------------------------

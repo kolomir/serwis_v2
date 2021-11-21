@@ -1,7 +1,7 @@
 {% extends 'serwis/base.html' %}
 {% load bootstrap %}
 {% block content %}
-    <div class="card col-md-12 my-1 mx-auto text-white green darken-1">
+    <div class="card col-md-12 my-1 mx-auto text-white mdb-color lighten-2">
         <div class="card-body">
             <h2>Zgłoszenie nr #{{ zgloszenia.id }}</h2>
         </div>
@@ -43,7 +43,57 @@
                     </div>
                 </div>
                 {% endif %}
+                {% if wyslij == 0 %}
+                <div class="row">
+                    <div class="col-md-12 z-depth-1 align-middle">
+                        <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
+                    </div>
+                </div>
                 {% endif %}
+                {% endif %}
+
+                <div class="row">
+                    {% if zgloszenia.status == 2 or zgloszenia.status == 3 %}
+                    {% if wyslij == 1 %}
+                        <div class="col-md-3 z-depth-1 align-middle">
+                            <form method="post" role="form" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" id="status_text" name="status" value=2>
+                                <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
+                                <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
+                                <button type="submit" class="btn btn-primary" name="btn_form_zgloszenie">Wykonane <i class="fas fa-save fa-lg"></i></button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    {% endif %}
+                    {% if zgloszenia.status == 2 %}
+                    {% if wyslij == 1 %}
+                        <div class="col-md-9 z-depth-1 align-middle">
+                            <form method="post" role="form" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" id="status_text" name="status" value=2>
+                                <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
+                                <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
+                                <button type="submit" class="btn btn-primary" name="btn_form_zgloszenie">Oczekuje <i class="fas fa-save fa-lg"></i></button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    {% endif %}
+                    {% if zgloszenia.status == 3 %}
+                    {% if wyslij == 1 %}
+                        <div class="col-md-9 z-depth-1 align-middle">
+                            <form method="post" role="form" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" id="status_text" name="status" value=2>
+                                <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
+                                <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
+                                <button type="submit" class="btn btn-primary" name="btn_form_zgloszenie">Wykonuję <i class="fas fa-save fa-lg"></i></button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
             </div>
             <hr />
             <div class="container">
