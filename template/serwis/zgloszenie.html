@@ -9,6 +9,7 @@
     <div class="card col-md-12 my-1 mx-auto">
         <div class="card-body">
             <div class="container">
+                <!--treść-->
                 <div class="row">
                     <div class="col-md-2 z-depth-1 align-middle bg-opis">Temat</div>
                     <div class="col-md-10 z-depth-1 align-middle">{{ zgloszenia.temat_zgloszenia }}</div>
@@ -29,71 +30,112 @@
                     <div class="col-md-2 z-depth-1 align-middle bg-opis">Maszyna</div>
                     <div class="col-md-4 z-depth-1 align-middle">{{ zgloszenia.urzadzenie }}</div>
                 </div>
+                <!--/.koniec treści-->
+    <!-- =========================================================================================== -->
+                <!--Przyciski-->
                 {% if zgloszenia.status == 1 %}
-                {% if wyslij == 1 %}
+                <!--Serwisant - podjęcie działania-->
+                {% if serwisant == 1 %}
                 <div class="row">
                     <div class="col-md-12 z-depth-1 align-middle">
                         <form method="post" role="form" enctype="multipart/form-data">
                             {% csrf_token %}
                             <input type="hidden" id="status_text" name="status" value=2>
-                            <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
-                            <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
-                            <button type="submit" class="btn btn-primary" name="btn_form_zgloszenie">Podejmij <i class="fas fa-save fa-lg"></i></button>
+                            <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
+                            <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
+                            <button type="submit" class="btn btn-primary" name="btn_form_podejmij">Podejmij <i class="fas fa-save fa-lg"></i></button>
                         </form>
                     </div>
                 </div>
                 {% endif %}
-                {% if wyslij == 0 %}
+                <!--/.Serwisant - koniec-->
+                <!--Właściciel - anulowanie zgłoszenia-->
+                {% if serwisant == 0 %}
                 <div class="row">
                     <div class="col-md-12 z-depth-1 align-middle">
                         <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
                     </div>
                 </div>
                 {% endif %}
+                <!--/.Właściciel - koniec-->
                 {% endif %}
-
                 <div class="row">
                     {% if zgloszenia.status == 2 or zgloszenia.status == 3 %}
-                    {% if wyslij == 1 %}
+                    <!--Serwisant - wykonanie zadania-->
+                    {% if serwisant == 1 %}
                         <div class="col-md-3 z-depth-1 align-middle">
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <input type="hidden" id="status_text" name="status" value=2>
-                                <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
-                                <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
-                                <button type="submit" class="btn btn-primary" name="btn_form_zgloszenie">Wykonane <i class="fas fa-save fa-lg"></i></button>
+                                <input type="hidden" id="status_text" name="status" value=4>
+                                <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
+                                <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
+                                <button type="submit" class="btn btn-primary" name="btn_form_wykonane">Wykonane <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
                     {% endif %}
+                    <!--/.Serwisant - koniec-->
                     {% endif %}
                     {% if zgloszenia.status == 2 %}
-                    {% if wyslij == 1 %}
+                    <!--serwisant - przeniesienie do grupy oczekujących zadań-->
+                    {% if serwisant == 1 %}
                         <div class="col-md-9 z-depth-1 align-middle">
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <input type="hidden" id="status_text" name="status" value=2>
-                                <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
-                                <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
-                                <button type="submit" class="btn btn-primary" name="btn_form_zgloszenie">Oczekuje <i class="fas fa-save fa-lg"></i></button>
+                                <input type="hidden" id="status_text" name="status" value=3>
+                                <button type="submit" class="btn btn-primary" name="btn_form_wstrzymane">Wstrzymać <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
                     {% endif %}
+                    <!--/.Serwisant - koniec-->
+                    <!--Właściciel - Anulowanie zlecenia-->
+                    {% if serwisant == 0 %}
+                        <div class="col-md-12 z-depth-1 align-middle">
+                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
+                        </div>
+                    {% endif %}
+                    <!--/.Serwisant - koniec-->
                     {% endif %}
                     {% if zgloszenia.status == 3 %}
-                    {% if wyslij == 1 %}
+                    <!--Serwisant - podjęcie zadania które było oczekujące-->
+                    {% if serwisant == 1 %}
                         <div class="col-md-9 z-depth-1 align-middle">
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" id="status_text" name="status" value=2>
-                                <input type="hidden" id="data_otwarcia_text" name="data_otwarcia" value={{ data_otwarcia }}>
-                                <input type="hidden" id="czas_otwarcia_text" name="czas_otwarcia" value={{ czas_otwarcia }}>
-                                <button type="submit" class="btn btn-primary" name="btn_form_zgloszenie">Wykonuję <i class="fas fa-save fa-lg"></i></button>
+                                <button type="submit" class="btn btn-primary" name="btn_form_przywrocenie">Przywrócenie <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
                     {% endif %}
+                    <!--/.Serwisant - koniec-->
+                    <!--Właściciel - Anulowanie zlecenia-->
+                    {% if serwisant == 0 %}
+                        <div class="col-md-12 z-depth-1 align-middle">
+                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
+                        </div>
+                    {% endif %}
+                    <!--/.Serwisant - koniec-->
                     {% endif %}
                 </div>
+                <!--/.koniec przycisków-->
+    <!--/.================================================================================================= -->
+    <!-- =========================================================================================== -->
+                {% if zgloszenia.status == 4 %}
+                {% if serwisant == 0 %}
+                    <div class="row">
+                        <div class="col-md-12 z-depth-1 align-middle">
+                            <form method="post" role="form" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" id="status_text" name="status" value=5>
+                                <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
+                                <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
+                                <button type="submit" class="btn btn-primary" name="btn_form_zakonczenie">Zakończenie <i class="fas fa-save fa-lg"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+                {% endif %}
 
+    <!--/.=========================================================================================== -->
             </div>
             <hr />
             <div class="container">

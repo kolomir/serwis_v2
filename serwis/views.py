@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie, Comments
-from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm, AnulowacZgloszenie
+from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm, AnulowacZgloszenie, WykonanieZgloszenie, ZawieszenieZgloszenia
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
@@ -86,7 +86,7 @@ def wpisy(request):
         serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
         wyslij = int(serwisy.serwis)
         zgloszenia_zglaszajacy = Zgloszenie.objects.filter(status__gte=2,status__lte=4).filter(zglaszajacy=zglaszajacy_wpisy.id).order_by('status')
-        zgloszenia_serwis = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).order_by('status','data_zgloszenia', 'czas_zgloszenia')
+        zgloszenia_serwis = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).filter(status__gte=2,status__lt=4).order_by('status','data_zgloszenia', 'czas_zgloszenia')
     else:
         zgloszenia_zglaszajacy = ""
         zgloszenia_serwis = ""
@@ -115,10 +115,16 @@ def wpis_szczegoly(request, id):
     lista_userow = get_user_model()
     zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
     serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
-    wyslij = int(serwisy.serwis)
+    serwisant = int(serwisy.serwis)
 
     # - forms - podjęcie zgłoszenia -----------------
     form_podjecie_zgloszenia = PodjecieZgloszeniaForm(request.POST or None, request.FILES or None, instance=zgloszenia)
+
+    # - forms - zawieszenie/wznownienie zgłoszenia --------------
+    form_zawieszenie_zgloszenia = ZawieszenieZgloszenia(request.POST or None, request.FILES or None, instance=zgloszenia)
+
+    # - forms - wykonanie zgłoszenia ----------------
+    form_wykonanie_zgloszenia = WykonanieZgloszenie(request.POST or None, request.FILES or None, instance=zgloszenia)
 
     # - forms - komentarze --------------------------
     komentarze = Comments.objects.filter(zgloszenie=zgloszenia.id).order_by('data_wpisu')
@@ -127,8 +133,8 @@ def wpis_szczegoly(request, id):
     # =================================================================
     # - STREFA TESTU --------------------------------------------------
     # =================================================================
-    data_zgl = request.POST.get('data_otwarcia')
-    czas_zgl = request.POST.get('czas_otwarcia')
+    data_zgl = request.POST.get('data_przekazana')
+    czas_zgl = request.POST.get('czas_przekazany')
     status = request.POST.get('status')
 
     data_com = request.POST.get('data_wpisu')
@@ -151,25 +157,83 @@ def wpis_szczegoly(request, id):
     # -----------------------------------------------------------------
 
     data_teraz = datetime.now()
-    data_otwarcia = data_teraz.strftime("%Y-%m-%d")
+    data_przekazana = data_teraz.strftime("%Y-%m-%d")
     czas_teraz = timezone.now()
-    czas_otwarcia = czas_teraz.strftime("%H:%M")
+    czas_przekazany = czas_teraz.strftime("%H:%M")
     #'''
-    if request.method == 'POST' and 'btn_form_zgloszenie' in request.POST:
+    if request.method == 'POST' and 'btn_form_podejmij' in request.POST:
 
         if form_podjecie_zgloszenia.is_valid():
             autor = get_author(request.user)
             form_podjecie_zgloszenia.instance.serwisant = autor
-            form_podjecie_zgloszenia.instance.data_otwarcia = request.POST.get('data_otwarcia')
-            form_podjecie_zgloszenia.instance.czas_otwarcia = request.POST.get('czas_otwarcia')
+            form_podjecie_zgloszenia.instance.data_otwarcia = request.POST.get('data_przekazana')
+            form_podjecie_zgloszenia.instance.czas_otwarcia = request.POST.get('czas_przekazany')
             form_podjecie_zgloszenia.instance.status = status
+            print('>>-- Podjecie --<<')
             print(
                 'autor:', autor,
                 ' ; autor.id:', autor.id,
-                ' ; data_otwarcia:', data_otwarcia,
-                ' ; czas_otwarcia:', czas_otwarcia,
+                ' ; data_otwarcia:', data_przekazana,
+                ' ; czas_otwarcia:', czas_przekazany,
                 ' ; status:', status)
+            print('>>---------------<<')
             form_podjecie_zgloszenia.save()
+            return redirect(wpisy)
+
+    if request.method == 'POST' and 'btn_form_wykonane' in request.POST:
+
+        if form_wykonanie_zgloszenia.is_valid():
+            form_wykonanie_zgloszenia.instance.data_wykonania = request.POST.get('data_przekazana')
+            form_wykonanie_zgloszenia.instance.czas_wykonania = request.POST.get('czas_przekazany')
+            form_wykonanie_zgloszenia.instance.status = status
+            print('>>-- Wykonanie --<<')
+            print(
+                'data_otwarcia:', data_przekazana,
+                ' ; czas_otwarcia:', czas_przekazany,
+                ' ; status:', status)
+            print('>>---------------<<')
+            form_wykonanie_zgloszenia.save()
+            return redirect(wpisy)
+
+    if request.method == 'POST' and 'btn_form_wstrzymane' in request.POST:
+# TODO: jeżeli jest wstrzymane zgłoszenie z jakichś powodów to może wyłączyć również komentarze na ten czas.
+        if form_wykonanie_zgloszenia.is_valid():
+            form_wykonanie_zgloszenia.instance.status = status
+            print('>>-- Wstrzymanie --<<')
+            print(
+                'data_otwarcia:', data_przekazana,
+                ' ; czas_otwarcia:', czas_przekazany,
+                ' ; status:', status)
+            print('>>-----------------<<')
+            form_wykonanie_zgloszenia.save()
+            return redirect(wpisy)
+
+    if request.method == 'POST' and 'btn_form_przywrocenie' in request.POST:
+# TODO: po przywróceniu zlecenia komentarze powinny wrócić oczywiście.
+        if form_wykonanie_zgloszenia.is_valid():
+            form_wykonanie_zgloszenia.instance.status = status
+            print('>>-- Przywrócenie --<<')
+            print(
+                'data_otwarcia:', data_przekazana,
+                ' ; czas_otwarcia:', czas_przekazany,
+                ' ; status:', status)
+            print('>>------------------<<')
+            form_wykonanie_zgloszenia.save()
+            return redirect(wpisy)
+# TODO: zminić sposób zatwierdzania. Powinna być strona uperniająca z potwierdzeniem tak jak przy anulowaniu zlecenia
+    if request.method == 'POST' and 'btn_form_zakonczenie' in request.POST:
+
+        if form_wykonanie_zgloszenia.is_valid():
+            form_wykonanie_zgloszenia.instance.data_zamkniecia = request.POST.get('data_przekazana')
+            form_wykonanie_zgloszenia.instance.czas_zamkniecia = request.POST.get('czas_przekazany')
+            form_wykonanie_zgloszenia.instance.status = status
+            print('>>-- Zamknięcie --<<')
+            print(
+                'data_otwarcia:', data_przekazana,
+                ' ; czas_otwarcia:', czas_przekazany,
+                ' ; status:', status)
+            print('>>----------------<<')
+            form_wykonanie_zgloszenia.save()
             return redirect(wpisy)
     #'''
     if request.method == 'POST':# and 'btn_form_komentarz' in request.POST:
@@ -185,8 +249,8 @@ def wpis_szczegoly(request, id):
                 '11111111111111111',
                 'autor:', autor,
                 ' ; autor.id:', autor.id,
-                ' ; data_wpisu:', data_otwarcia,
-                ' ; czas_wpisu:', czas_otwarcia,
+                ' ; data_wpisu:', data_przekazana,
+                ' ; czas_wpisu:', czas_przekazany,
                 ' ; tresc:', tresci,
                 ' ; zgloszenie:', zgloszenie_com)
             form_komentarze.save()
@@ -195,9 +259,9 @@ def wpis_szczegoly(request, id):
     context = {
         'zgloszenia': zgloszenia,
         'form_podjecie_zgloszenia': form_podjecie_zgloszenia,
-        'data_otwarcia': data_otwarcia,
-        'czas_otwarcia': czas_otwarcia,
-        'wyslij': wyslij,
+        'data_przekazana': data_przekazana,
+        'czas_przekazany': czas_przekazany,
+        'serwisant': serwisant,
         'komentarze': komentarze,
         'form_komentarze': form_komentarze,
     }
@@ -267,7 +331,7 @@ def nowe_zgloszenie(request):
 
 
 #---------------------------------------------------
-#  Formularz nowego zgłoszenia
+#  Anulowanie zgłoszenia
 #---------------------------------------------------
 @login_required
 def anuluj_zgloszenie(request, id):
@@ -295,6 +359,44 @@ def anuluj_zgloszenie(request, id):
         'czas_zamkniecia': czas_zamkniecia,
     }
     return render(request, 'serwis/potwierdz_anuluj_zgloszenie.html', context)
+
+#TODO: można dodać tabelę dodatkową do opisów po wykonaniu zlecenia. Innym pomysłem jest dodanie pozycji jako ostatni komentarz.
+#TODO: zminić sposób zatwierdzania. Powinna być strona uperniająca z potwierdzeniem tak jak przy anulowaniu zlecenia
+#---------------------------------------------------
+#  Zamknięcie zgłoszenia
+#---------------------------------------------------
+@login_required
+def zakoncz_zgloszenie(request, id):
+    wpis = get_object_or_404(Zgloszenie, pk=id)
+    form_wpis = AnulowacZgloszenie(request.POST or None, request.FILES or None, instance=wpis)
+
+    data_teraz = datetime.now()
+    data_przekazana = data_teraz.strftime("%Y-%m-%d")
+    czas_teraz = timezone.now()
+    czas_przekazany = czas_teraz.strftime("%H:%M")
+    status = 5
+
+    if form_wpis.is_valid():
+        #kasuj = form_wpis.save(commit=False)
+        print('>>-- Zamknięcie --<<')
+        print(
+            'data_otwarcia:', data_przekazana,
+            ' ; czas_otwarcia:', czas_przekazany,
+            ' ; status:', status)
+        print('>>----------------<<')
+        form_wpis.instance.status = status
+        form_wpis.instance.data_zamkniecia = request.POST.get('data_przekazana')
+        form_wpis.instance.czas_zamkniecia = request.POST.get('czas_przekazany')
+        form_wpis.save()
+        return redirect(wpisy)
+
+
+    context = {
+        'wpis': wpis,
+        'data_przekazana': data_przekazana,
+        'czas_przekazany': czas_przekazany,
+    }
+    return render(request, 'serwis/potwierdz_zakoncz_zgloszenie.html', context)
 
 
 #---------------------------------------------------

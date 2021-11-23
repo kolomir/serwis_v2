@@ -51,6 +51,16 @@ class ZgloszeniForm(ModelForm):
         ]
 
 
+class WykonanieZgloszenie(ModelForm):
+    class Meta:
+        model = Zgloszenie
+        fields = [
+            'status',
+            'data_wykonania',
+            'czas_wykonania',
+        ]
+
+
 class AnulowacZgloszenie(ModelForm):
     class Meta:
         model = Zgloszenie
@@ -58,6 +68,14 @@ class AnulowacZgloszenie(ModelForm):
             'status',
             'data_zamkniecia',
             'czas_zamkniecia',
+        ]
+
+
+class ZawieszenieZgloszenia(ModelForm):
+    class Meta:
+        model = Zgloszenie
+        fields = [
+            'status',
         ]
 
 

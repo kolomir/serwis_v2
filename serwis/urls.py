@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import nowy_RodzajUsterek, nowe_Urzadzenie, nowy_serwisant, nowe_zgloszenie, login_request, logout_request, wpisy, wpis_szczegoly, autorzy, anuluj_zgloszenie
+from .views import nowy_RodzajUsterek, nowe_Urzadzenie, nowy_serwisant, nowe_zgloszenie, login_request, logout_request, wpisy, wpis_szczegoly, autorzy, anuluj_zgloszenie, zakoncz_zgloszenie
 
 
 urlpatterns = [
@@ -11,6 +11,8 @@ urlpatterns = [
         path('nowy_serwisant/', nowy_serwisant, name='nowy_serwisant'),
         #- KASOWANIE -----------------------------------------------------------
         path('potwierdz_anuluj_zgloszenie/<int:id>/', anuluj_zgloszenie, name='anuluj_zgloszenie'),
+        #- ZAKONCZENIE ---------------------------------------------------------
+        path('potwierdz_zakoncz_zgloszenie/<int:id>/', zakoncz_zgloszenie, name='zakoncz_zgloszenie'),
         #- SYSTEM --------------------------------------------------------------
         path('login/', login_request, name='login'),
         path('logout/', logout_request, name='logout'),

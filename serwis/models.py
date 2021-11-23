@@ -68,6 +68,8 @@ class Zgloszenie(models.Model):
     serwisant = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='serwisant', blank=True, null=True) #                           | <-- Etap II - Przydzielenie
     data_zamkniecia = models.DateField('data zamknięcia', default='1900-01-01', blank=True, null=True)              #                                                           | <-- Etap III - Zamknięcie
     czas_zamkniecia = models.TimeField('czas zamknięcia', default='00:00', blank=True, null=True)                   #                                                           | <-- Etap III - Zamknięcie
+    data_wykonania = models.DateField('data wykonania', default='1900-01-01', blank=True, null=True)              #                                                           | <-- Etap III - Zamknięcie
+    czas_wykonania = models.TimeField('czas wykonania', default='00:00', blank=True, null=True)                   #                                                           | <-- Etap III - Zamknięcie
 
     def __str__(self):
         return self.temat_zgloszenia
