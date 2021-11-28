@@ -1,10 +1,13 @@
 {% extends 'serwis/base.html' %}
 {% load bootstrap %}
 {% block content %}
-    <div class="row justify-content-md-center">
-        <div class="col-xl-6 col-md-6">
-            <h5><strong>Zaloguj się</strong></h5>
-            <hr class="red title-hr">
+    <div class="card col-md-12 my-1 mx-auto text-white green darken-1">
+        <div class="card-body">
+            <h2>Zalogij się</h2>
+        </div>
+    </div>
+    <div class="card col-md-12 my-1 mx-auto">
+        <div class="card-body">
             <form method="post" role="form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="md-form md-outline">

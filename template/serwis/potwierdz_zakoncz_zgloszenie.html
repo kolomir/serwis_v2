@@ -1,25 +1,22 @@
 {% extends 'serwis/base.html' %}
 {% load bootstrap %}
 {% block content %}
-    <div class="card col-md-12 my-1 mx-auto text-white mdb-color lighten-2">
-        <div class="card-body">
-            <h2>Zgłoszenie nr #{{ wpis.id }}</h2>
-        </div>
-    </div>
-    <div class="card col-md-12 my-1 mx-auto">
-        <div class="card-body">
-            <div class="container">
-                <h4>Czy napewno twoje zgloszenie:</h4> <h2>{{ wpis.temat_zgloszenia }} zostało wykonane poprawnie?? </h2>
-                <form method="POST" role="form" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <input type="hidden" id="data_wpisu_text" name="data_zamkniecia" value={{ data_zamkniecia }}>
-                        <input type="hidden" id="czas_wpisu_text" name="czas_zamkniecia" value={{ czas_zamkniecia }}>
-                        <button type="submit" class="btn btn-outline-danger btn-rounded waves-effect">Tak <i class="far fa-check-square"></i></button>
-                        <a class="btn btn-outline-success btn-rounded waves-effect" href="/" role="button">Nie <i class="fas fa-times"></i></a>
-                    </div>
-                </form>
+
+            <div class="row justify-content-md-center">
+                <div class="col-xl-6 col-md-6">
+                    <h5><strong>Zgłoszenie nr #{{ wpis.id }}</strong></h5>
+                    <hr class="red title-hr">
+                    <h4>Czy napewno twoje zgloszenie:</h4> <h2>{{ wpis.temat_zgloszenia }} zostało wykonane poprawnie?? </h2>
+                    <form method="POST" role="form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="hidden" id="data_wpisu_text" name="data_zamkniecia" value={{ data_zamkniecia }}>
+                            <input type="hidden" id="czas_wpisu_text" name="czas_zamkniecia" value={{ czas_zamkniecia }}>
+                            <button type="submit" class="btn btn-outline-danger btn-rounded waves-effect">Tak <i class="far fa-check-square"></i></button>
+                            <a class="btn btn-outline-success btn-rounded waves-effect" href="/" role="button">Nie <i class="fas fa-times"></i></a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
+
 {% endblock content %}

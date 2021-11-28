@@ -1,69 +1,96 @@
 {% extends 'serwis/base.html' %}
 {% load bootstrap %}
 {% block content %}
-    <div class="card col-md-12 my-1 mx-auto text-white mdb-color lighten-2">
-        <div class="card-body">
-            <h2>Zgłoszenie nr #{{ zgloszenia.id }}</h2>
-        </div>
-    </div>
-    <div class="card col-md-12 my-1 mx-auto">
-        <div class="card-body">
-            <div class="container">
-                <!--treść-->
-                <div class="row">
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Temat</div>
-                    <div class="col-md-10 z-depth-1 align-middle">{{ zgloszenia.temat_zgloszenia }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Opis</div>
-                    <div class="col-md-10 z-depth-1 align-middle">{{ zgloszenia.opis_zgloszenia }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Data i czas zgloszenia</div>
-                    <div class="col-md-4 z-depth-1 align-middle">{{ zgloszenia.data_zgloszenia }} {{ zgloszenia.czas_zgloszenia }}</div>
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Zgłaszający</div>
-                    <div class="col-md-4 z-depth-1 align-middle">{{ zgloszenia.zglaszajacy }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Rodzaj usterki</div>
-                    <div class="col-md-4 z-depth-1 align-middle">{{ zgloszenia.rodzaj_usterki }}</div>
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Maszyna</div>
-                    <div class="col-md-4 z-depth-1 align-middle">{{ zgloszenia.urzadzenie }}</div>
-                </div>
-                <!--/.koniec treści-->
-    <!-- =========================================================================================== -->
-                <!--Przyciski-->
-                {% if zgloszenia.status == 1 %}
-                <!--Serwisant - podjęcie działania-->
-                {% if serwisant == 1 %}
-                <div class="row">
-                    <div class="col-md-12 z-depth-1 align-middle">
-                        <form method="post" role="form" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input type="hidden" id="status_text" name="status" value=2>
-                            <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
-                            <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
-                            <button type="submit" class="btn btn-primary" name="btn_form_podejmij">Podejmij <i class="fas fa-save fa-lg"></i></button>
-                        </form>
+
+            <div class="row justify-content-md-center">
+                <div class="col-xl-6 col-md-6">
+                    <h5><strong>Zgłoszenie nr #{{ wpis.id }}</strong></h5>
+                    <hr class="red title-hr">
+                    <div class="row">
+                        <div class="col-md-2">Temat</div>
+                        <div class="col-md-10">{{ zgloszenia.temat_zgloszenia }}</div>
                     </div>
-                </div>
-                {% endif %}
-                <!--/.Serwisant - koniec-->
-                <!--Właściciel - anulowanie zgłoszenia-->
-                {% if serwisant == 0 %}
-                <div class="row">
-                    <div class="col-md-12 z-depth-1 align-middle">
-                        <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
+                    <div class="row">
+                        <div class="col-md-2">Opis</div>
+                        <div class="col-md-10">{{ zgloszenia.opis_zgloszenia }}</div>
                     </div>
-                </div>
-                {% endif %}
-                <!--/.Właściciel - koniec-->
-                {% endif %}
-                <div class="row">
-                    {% if zgloszenia.status == 2 or zgloszenia.status == 3 %}
-                    <!--Serwisant - wykonanie zadania-->
-                    {% if serwisant == 1 %}
-                        <div class="col-md-3 z-depth-1 align-middle">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <small>Rodzaj usterki</small>
+                        </div>
+                        <div class="col-md-4">
+                            <small>{{ zgloszenia.rodzaj_usterki }}</small>
+                        </div>
+                        <div class="col-md-2">
+                            <small>Maszyna</small>
+                        </div>
+                        <div class="col-md-4">
+                            <small>{{ zgloszenia.urzadzenie }}</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12"><small>Data i czas zgloszenia</small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><small>{{ zgloszenia.data_zgloszenia }}<br />{{ zgloszenia.czas_zgloszenia }}</small></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12"><small>Zgłaszający</small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><small>{{ zgloszenia.zglaszajacy }}</small></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12"><small>Data i czas otwarcia</small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><small>{{ zgloszenia.data_otwarcia }}<br />{{ zgloszenia.czas_otwarcia }}</small></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12"><small>Serwisant</small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><small>{{ zgloszenia.serwisant }}</small></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--Przyciski-->
+                        {% if zgloszenia.status == 1 %}
+                        <!--Serwisant - podjęcie działania-->
+                        {% if serwisant == 1 %}
+                        <div class="col-md-3">
+                            <form method="post" role="form" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" id="status_text" name="status" value=2>
+                                <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
+                                <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
+                                <button type="submit" class="btn btn-primary" name="btn_form_podejmij">Podejmij <i class="fas fa-save fa-lg"></i></button>
+                            </form>
+                        </div>
+                        {% endif %}
+                        <!--/.Serwisant - koniec-->
+                        <!--Właściciel - anulowanie zgłoszenia-->
+                        {% if serwisant == 0 %}
+                        <div class="col-md-3">
+                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
+                        </div>
+                        {% endif %}
+                        <!--/.Właściciel - koniec-->
+                        {% endif %}
+
+                        {% if zgloszenia.status == 2 or zgloszenia.status == 3 %}
+                        <!--Serwisant - wykonanie zadania-->
+                        {% if serwisant == 1 %}
+                        <div class="col-md-3">
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" id="status_text" name="status" value=4>
@@ -72,57 +99,52 @@
                                 <button type="submit" class="btn btn-primary" name="btn_form_wykonane">Wykonane <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
-                    {% endif %}
-                    <!--/.Serwisant - koniec-->
-                    {% endif %}
-                    {% if zgloszenia.status == 2 %}
-                    <!--serwisant - przeniesienie do grupy oczekujących zadań-->
-                    {% if serwisant == 1 %}
-                        <div class="col-md-9 z-depth-1 align-middle">
+                        {% endif %}
+                        <!--/.Serwisant - koniec-->
+                        {% endif %}
+                        {% if zgloszenia.status == 2 %}
+                        <!--serwisant - przeniesienie do grupy oczekujących zadań-->
+                        {% if serwisant == 1 %}
+                        <div class="col-md-3">
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" id="status_text" name="status" value=3>
                                 <button type="submit" class="btn btn-primary" name="btn_form_wstrzymane">Wstrzymać <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
-                    {% endif %}
-                    <!--/.Serwisant - koniec-->
-                    <!--Właściciel - Anulowanie zlecenia-->
-                    {% if serwisant == 0 %}
-                        <div class="col-md-12 z-depth-1 align-middle">
+                        {% endif %}
+                        <!--/.Serwisant - koniec-->
+                        <!--Właściciel - Anulowanie zlecenia-->
+                        {% if serwisant == 0 %}
+                        <div class="col-md-3">
                             <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
                         </div>
-                    {% endif %}
-                    <!--/.Serwisant - koniec-->
-                    {% endif %}
-                    {% if zgloszenia.status == 3 %}
-                    <!--Serwisant - podjęcie zadania które było oczekujące-->
-                    {% if serwisant == 1 %}
-                        <div class="col-md-9 z-depth-1 align-middle">
+                        {% endif %}
+                        <!--/.Serwisant - koniec-->
+                        {% endif %}
+                        {% if zgloszenia.status == 3 %}
+                        <!--Serwisant - podjęcie zadania które było oczekujące-->
+                        {% if serwisant == 1 %}
+                        <div class="col-md-3">
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" id="status_text" name="status" value=2>
                                 <button type="submit" class="btn btn-primary" name="btn_form_przywrocenie">Przywrócenie <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
-                    {% endif %}
-                    <!--/.Serwisant - koniec-->
-                    <!--Właściciel - Anulowanie zlecenia-->
-                    {% if serwisant == 0 %}
-                        <div class="col-md-12 z-depth-1 align-middle">
+                        {% endif %}
+                        <!--/.Serwisant - koniec-->
+                        <!--Właściciel - Anulowanie zlecenia-->
+                        {% if serwisant == 0 %}
+                        <div class="col-md-3">
                             <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
                         </div>
-                    {% endif %}
-                    <!--/.Serwisant - koniec-->
-                    {% endif %}
-                </div>
-                <!--/.koniec przycisków-->
-    <!--/.================================================================================================= -->
-    <!-- =========================================================================================== -->
-                {% if zgloszenia.status == 4 %}
-                {% if serwisant == 0 %}
-                    <div class="row">
-                        <div class="col-md-12 z-depth-1 align-middle">
+                        {% endif %}
+                        <!--/.Serwisant - koniec-->
+                        {% endif %}
+                        {% if zgloszenia.status == 4 %}
+                        {% if serwisant == 0 %}
+                        <div class="col-md-3">
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" id="status_text" name="status" value=5>
@@ -131,15 +153,16 @@
                                 <button type="submit" class="btn btn-primary" name="btn_form_zakonczenie">Zakończenie <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
+                        {% endif %}
+                        {% endif %}
                     </div>
-                {% endif %}
-                {% endif %}
-
-    <!--/.=========================================================================================== -->
+                </div>
             </div>
-            <hr />
-            <div class="container">
-                <div class="row">
+            <br /><br />
+            <div class="row justify-content-md-center">
+                <div class="col-xl-6 col-md-6">
+                    <h5><strong>Zostaw wiadomość</strong></h5>
+                    <hr class="red title-hr">
                     {% if zgloszenia.status == 2 or zgloszenia.status == 3 %}
                     <form method="post" role="form" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -155,21 +178,34 @@
                     {% endif %}
                 </div>
             </div>
-            <hr />
-            <div class="container">
-                {% for wpis in komentarze %}
-                <div class="row">
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Napisał</div>
-                    <div class="col-md-4 z-depth-1 align-middle">{{ wpis.autor }}</div>
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Data/godzina</div>
-                    <div class="col-md-4 z-depth-1 align-middle">{{ wpis.data_wpisu }} {{ wpis.czas_wpisu }}</div>
+            <br />
+            <div class="row justify-content-md-center">
+                <div class="col-xl-6 col-md-6">
+                    <h5><strong>Wiadomości i komentarze</strong></h5>
+                    <hr class="red title-hr">
+                    {% for wpis in komentarze %}
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12 text-center"><small>Napisał</small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center"><small><strong><em><b>{{ wpis.autor }}</b></em></strong></small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center"><small>Data i czas wpisu</small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center"><small><em><strong><b>{{ wpis.data_wpisu }}<br />{{ wpis.czas_wpisu }}</b></strong></em></small></div>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            {{ wpis.tresc }}
+                        </div>
+                    </div>
+                    <br />
+                    {% endfor %}
                 </div>
-                <div class="row">
-                    <div class="col-md-2 z-depth-1 align-middle bg-opis">Treść</div>
-                    <div class="col-md-10 z-depth-1 align-middle">{{ wpis.tresc }}</div>
-                </div>
-                {% endfor %}
             </div>
-        </div>
-    </div>
+
 {% endblock content %}

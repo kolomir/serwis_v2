@@ -22,3 +22,7 @@ z-index: 2 !important;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
+
+.col-md-12.dystans, .col-md-6.dystans {
+	margin-top: 25px;
+}
