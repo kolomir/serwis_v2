@@ -4,7 +4,7 @@
 
             <div class="row justify-content-md-center">
                 <div class="col-xl-6 col-md-6">
-                    <h5><strong>Zgłoszenie nr #{{ wpis.id }}</strong></h5>
+                    <h5><strong>Zgłoszenie nr #{{ zgloszenia.id }}</strong></h5>
                     <hr class="red title-hr">
                     <div class="row">
                         <div class="col-md-2">Temat</div>
@@ -73,7 +73,7 @@
                                 <input type="hidden" id="status_text" name="status" value=2>
                                 <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
                                 <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
-                                <button type="submit" class="btn btn-primary" name="btn_form_podejmij">Podejmij <i class="fas fa-save fa-lg"></i></button>
+                                <button type="submit" class="btn btn-outline-success waves-effect btn-sm" name="btn_form_podejmij">Podejmij <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
                         {% endif %}
@@ -81,7 +81,7 @@
                         <!--Właściciel - anulowanie zgłoszenia-->
                         {% if serwisant == 0 %}
                         <div class="col-md-3">
-                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
+                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger waves-effect btn-sm">Anuluj</a>
                         </div>
                         {% endif %}
                         <!--/.Właściciel - koniec-->
@@ -96,7 +96,7 @@
                                 <input type="hidden" id="status_text" name="status" value=4>
                                 <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
                                 <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
-                                <button type="submit" class="btn btn-primary" name="btn_form_wykonane">Wykonane <i class="fas fa-save fa-lg"></i></button>
+                                <button type="submit" class="btn btn-outline-primary waves-effect btn-sm" name="btn_form_wykonane">Wykonane <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
                         {% endif %}
@@ -109,7 +109,7 @@
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" id="status_text" name="status" value=3>
-                                <button type="submit" class="btn btn-primary" name="btn_form_wstrzymane">Wstrzymać <i class="fas fa-save fa-lg"></i></button>
+                                <button type="submit" class="btn btn-outline-danger waves-effect btn-sm" name="btn_form_wstrzymane">Wstrzymać <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
                         {% endif %}
@@ -117,7 +117,7 @@
                         <!--Właściciel - Anulowanie zlecenia-->
                         {% if serwisant == 0 %}
                         <div class="col-md-3">
-                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
+                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger waves-effect btn-sm">Anuluj</a>
                         </div>
                         {% endif %}
                         <!--/.Serwisant - koniec-->
@@ -129,7 +129,7 @@
                             <form method="post" role="form" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" id="status_text" name="status" value=2>
-                                <button type="submit" class="btn btn-primary" name="btn_form_przywrocenie">Przywrócenie <i class="fas fa-save fa-lg"></i></button>
+                                <button type="submit" class="btn btn-outline-success waves-effect btn-sm" name="btn_form_przywrocenie">Przywrócenie <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
                         {% endif %}
@@ -137,7 +137,7 @@
                         <!--Właściciel - Anulowanie zlecenia-->
                         {% if serwisant == 0 %}
                         <div class="col-md-3">
-                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger btn-rounded waves-effect btn-sm">Anuluj</a>
+                            <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger waves-effect btn-sm">Anuluj</a>
                         </div>
                         {% endif %}
                         <!--/.Serwisant - koniec-->
@@ -150,7 +150,7 @@
                                 <input type="hidden" id="status_text" name="status" value=5>
                                 <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
                                 <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
-                                <button type="submit" class="btn btn-primary" name="btn_form_zakonczenie">Zakończenie <i class="fas fa-save fa-lg"></i></button>
+                                <button type="submit" class="btn btn-outline-success waves-effect btn-sm" name="btn_form_zakonczenie">Zakończenie <i class="fas fa-save fa-lg"></i></button>
                             </form>
                         </div>
                         {% endif %}
@@ -173,7 +173,7 @@
                         <input type="hidden" id="data_wpisu_text" name="data_wpisu" value={{ data_otwarcia }}>
                         <input type="hidden" id="czas_wpisu_text" name="czas_wpisu" value={{ czas_otwarcia }}>
                         <input type="hidden" id="zgloszenie_text" name="zgloszenie" value={{ zgloszenia.id }}>
-                        <button type="submit" class="btn btn-primary" name="btn_form_komentarz">Zapisz <i class="fas fa-save fa-lg"></i></button>
+                        <button type="submit" class="btn btn-outline-primary waves-effect btn-sm" name="btn_form_komentarz">Zapisz <i class="fas fa-save fa-lg"></i></button>
                     </form>
                     {% endif %}
                 </div>

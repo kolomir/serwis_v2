@@ -31,9 +31,9 @@
                             <td>{{ wpis.serwisant }}</td>
                             {% if user.is_authenticated %}
                             <td>
-                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Szczegóły</a>
+                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
                                 {% if wyslij == 1 %}
-                                    <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Podejmij</a>
+                                    <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-success waves-effect btn-sm">Podejmij</a>
                                 {% endif %}
                             </td>
                             {% endif %}
@@ -85,10 +85,7 @@
                             <td>{{ wpis.serwisant }}</td>
                             {% if user.is_authenticated %}
                             <td>
-                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Szczegóły</a>
-                                {% if wyslij == 1 %}
-                                    <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Podejmij</a>
-                                {% endif %}
+                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
                             </td>
                             {% endif %}
                         </tr>
@@ -139,9 +136,9 @@
                             <td>{{ wpis.serwisant }}</td>
                             {% if user.is_authenticated %}
                             <td>
-                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Szczegóły</a>
+                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
                                 {% if wyslij == 1 %}
-                                    <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm mr-2">Podejmij</a>
+                                    <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-success waves-effect btn-sm">Podejmij</a>
                                 {% endif %}
                             </td>
                             {% endif %}
