@@ -26,7 +26,13 @@
                     {% endif %}
                     {% endif %}
                 </ul>
-
+                <span class="navbar-text white-text">
+                    {% if user.is_authenticated %}
+                    <small>Jesteś zalogowany jako: </small><b><em>{{ user }}</em></b>
+                    {% else %}
+                        Nie jesteś zalogowany!
+                    {% endif %}
+                </span>
                 <ul class="navbar-nav ml-1 nav-flex-icons">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">

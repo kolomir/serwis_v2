@@ -315,7 +315,7 @@ def nowe_zgloszenie(request):
         form_zgloszenie.instance.data_zgloszenia = request.POST.get('data_zgloszenia')
         form_zgloszenie.instance.czas_zgloszenia = request.POST.get('czas_zgloszenia')
         form_zgloszenie.save()
-        return redirect(nowe_zgloszenie)
+        return redirect(wpisy)
 
     context = {
         'form_zgloszenie': form_zgloszenie,
@@ -346,9 +346,13 @@ def anuluj_zgloszenie(request, id):
 
     if form_wpis.is_valid():
         #kasuj = form_wpis.save(commit=False)
-        form_wpis.instance.status = status
-        form_wpis.instance.data_zgloszenia = request.POST.get('data_zamkniecia')
-        form_wpis.instance.czas_zgloszenia = request.POST.get('czas_zamkniecia')
+        #kasuj.status = status
+        #kasuj.data_zamkniecia = request.POST.get('data_zamkniecia')
+        #kasuj.czas_zamkniecia = request.POST.get('czas_zamkniecia')
+        #kasuj.save()
+        form_wpis.instance.status = request.POST.get('status')
+        form_wpis.instance.data_zamkniecia = request.POST.get('data_zamkniecia')
+        form_wpis.instance.czas_zamkniecia = request.POST.get('czas_zamkniecia')
         form_wpis.save()
         return redirect(wpisy)
 
@@ -428,7 +432,7 @@ def login_request(request):
 def logout_request(request):
     logout(request)
     messages.info(request, "Właśnie się wylogowałeś")
-    return redirect(nowe_zgloszenie)
+    return redirect(wpisy)
 
 
 #---------------------------------------------------

@@ -27,7 +27,26 @@
                             <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
                             <td>{{ wpis.temat_zgloszenia }}</td>
                             <td>{{ wpis.urzadzenie }}</td>
-                            <td>{{ wpis.status }}</td>
+                            <td>
+                                {% if wpis.status == 1 %}
+                                Nowe zgłoszenie
+                                {% endif %}
+                                {% if wpis.status == 2 %}
+                                Otwarte
+                                {% endif %}
+                                {% if wpis.status == 3 %}
+                                Czeka na wyjaśnienie
+                                {% endif %}
+                                {% if wpis.status == 4 %}
+                                Wykonany
+                                {% endif %}
+                                {% if wpis.status == 5 %}
+                                Zamknięty
+                                {% endif %}
+                                {% if wpis.status == 6 %}
+                                Anulowany
+                                {% endif %}
+                            </td>
                             <td>{{ wpis.serwisant }}</td>
                             {% if user.is_authenticated %}
                             <td>
@@ -81,7 +100,26 @@
                             <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
                             <td>{{ wpis.temat_zgloszenia }}</td>
                             <td>{{ wpis.urzadzenie }}</td>
-                            <td>{{ wpis.status }}</td>
+                            <td>
+                                {% if wpis.status == 1 %}
+                                Nowe zgłoszenie
+                                {% endif %}
+                                {% if wpis.status == 2 %}
+                                Otwarte
+                                {% endif %}
+                                {% if wpis.status == 3 %}
+                                Czeka na wyjaśnienie
+                                {% endif %}
+                                {% if wpis.status == 4 %}
+                                Wykonany
+                                {% endif %}
+                                {% if wpis.status == 5 %}
+                                Zamknięty
+                                {% endif %}
+                                {% if wpis.status == 6 %}
+                                Anulowany
+                                {% endif %}
+                            </td>
                             <td>{{ wpis.serwisant }}</td>
                             {% if user.is_authenticated %}
                             <td>
@@ -132,7 +170,26 @@
                             <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
                             <td>{{ wpis.temat_zgloszenia }}</td>
                             <td>{{ wpis.urzadzenie }}</td>
-                            <td>{{ wpis.status }}</td>
+                            <td>
+                                {% if wpis.status == 1 %}
+                                Nowe zgłoszenie
+                                {% endif %}
+                                {% if wpis.status == 2 %}
+                                Otwarte
+                                {% endif %}
+                                {% if wpis.status == 3 %}
+                                Czeka na wyjaśnienie
+                                {% endif %}
+                                {% if wpis.status == 4 %}
+                                Wykonany
+                                {% endif %}
+                                {% if wpis.status == 5 %}
+                                Zamknięty
+                                {% endif %}
+                                {% if wpis.status == 6 %}
+                                Anulowany
+                                {% endif %}
+                            </td>
                             <td>{{ wpis.serwisant }}</td>
                             {% if user.is_authenticated %}
                             <td>
@@ -185,7 +242,26 @@
                             <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
                             <td>{{ wpis.temat_zgloszenia }}</td>
                             <td>{{ wpis.urzadzenie }}</td>
-                            <td>{{ wpis.status }}</td>
+                            <td>
+                                {% if wpis.status == 1 %}
+                                Nowe zgłoszenie
+                                {% endif %}
+                                {% if wpis.status == 2 %}
+                                Otwarte
+                                {% endif %}
+                                {% if wpis.status == 3 %}
+                                Czeka na wyjaśnienie
+                                {% endif %}
+                                {% if wpis.status == 4 %}
+                                Wykonany
+                                {% endif %}
+                                {% if wpis.status == 5 %}
+                                Zamknięty
+                                {% endif %}
+                                {% if wpis.status == 6 %}
+                                Anulowany
+                                {% endif %}
+                            </td>
                             <td>{{ wpis.zglaszajacy }}</td>
                             <td>{{ wpis.serwisant }}</td>
                         </tr>

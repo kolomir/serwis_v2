@@ -9,7 +9,9 @@
                     <h4>Czy napewno chcesz usunąć zgłoszenie:</h4> <h2>{{ wpis.temat_zgloszenia }} ??</h2>
                     <form method="POST" role="form" enctype="multipart/form-data">
                         {% csrf_token %}
+                        {{ form }}
                         <div class="form-group">
+                            <input type="hidden" id="status_wpisu_text" name="status" value=6>
                             <input type="hidden" id="data_wpisu_text" name="data_zamkniecia" value={{ data_zamkniecia }}>
                             <input type="hidden" id="czas_wpisu_text" name="czas_zamkniecia" value={{ czas_zamkniecia }}>
                             <button type="submit" class="btn btn-outline-danger waves-effect btn-sm">Tak <i class="far fa-check-square"></i></button>
