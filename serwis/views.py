@@ -62,16 +62,35 @@ def nowe_Urzadzenie(request):
 
 
 #---------------------------------------------------
-#  Wpisy - START
+#  Zestawienie zamkniętych zleceń
 #---------------------------------------------------
-def wpis_start(request):
-    zgloszenia = Zgloszenie.objects.filter(status__lte=4).order_by('data_zgloszenia', 'czas_zgloszenia')
+def wpis_zamkniete(request):
+    zamkniete_zgloszenia = Zgloszenie.objects.filter(status__gte=5).order_by('-data_zgloszenia', 'czas_zgloszenia')
+
+    context = {
+        'zamkniete_zgloszenia': zamkniete_zgloszenia,
+    }
+
+    return render(request, 'serwis/zamkniete.html', context)
+
+
+#---------------------------------------------------
+#  Zestawienie zamkniętych zleceń - szczegóły
+#---------------------------------------------------
+def wpis_zamkniete_szczegoly(request, id):
+    zgloszenia = get_object_or_404(Zgloszenie, pk=id)
+
+    # - komentarze --------------------------
+    komentarze = Comments.objects.filter(zgloszenie=zgloszenia.id).order_by('data_wpisu')
+
 
     context = {
         'zgloszenia': zgloszenia,
+        'komentarze': komentarze,
     }
 
-    return render(request, 'serwis/start.html', context)
+    return render(request, 'serwis/zgloszenie_hist.html', context)
+
 
 #---------------------------------------------------
 #  Wpisy

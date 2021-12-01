@@ -17,13 +17,13 @@
                     <br />
                     <div class="row">
                         <div class="col-md-2">
-                            <small>Rodzaj usterki</small>
+                            <small><em>Rodzaj usterki</em></small>
                         </div>
                         <div class="col-md-4">
                             <small>{{ zgloszenia.rodzaj_usterki }}</small>
                         </div>
                         <div class="col-md-2">
-                            <small>Maszyna</small>
+                            <small><em>Maszyna</em></small>
                         </div>
                         <div class="col-md-4">
                             <small>{{ zgloszenia.urzadzenie }}</small>
@@ -32,7 +32,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="row">
-                                <div class="col-md-12"><small>Data i czas zgloszenia</small></div>
+                                <div class="col-md-12"><small><em>Data i czas zgloszenia</em></small></div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12"><small>{{ zgloszenia.data_zgloszenia }}<br />{{ zgloszenia.czas_zgloszenia }}</small></div>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="row">
-                                <div class="col-md-12"><small>Zgłaszający</small></div>
+                                <div class="col-md-12"><small><em>Zgłaszający</em></small></div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12"><small>{{ zgloszenia.zglaszajacy }}</small></div>
@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="row">
-                                <div class="col-md-12"><small>Data i czas otwarcia</small></div>
+                                <div class="col-md-12"><small><em>Data i czas otwarcia</em></small></div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12"><small>
@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="row">
-                                <div class="col-md-12"><small>Serwisant</small></div>
+                                <div class="col-md-12"><small><em>Serwisant</em></small></div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12"><small>{{ zgloszenia.serwisant }}</small></div>
@@ -177,8 +177,8 @@
                             <textarea id="textarea_tresc" class="md-textarea form-control" rows="5" cols="160" name="tresc"></textarea>
                             <label for="textarea_tresc">Działanie</label>
                         </div>
-                        <input type="hidden" id="data_wpisu_text" name="data_wpisu" value={{ data_otwarcia }}>
-                        <input type="hidden" id="czas_wpisu_text" name="czas_wpisu" value={{ czas_otwarcia }}>
+                        <input type="hidden" id="data_wpisu_text" name="data_wpisu" value={{ data_przekazana }}>
+                        <input type="hidden" id="czas_wpisu_text" name="czas_wpisu" value={{ czas_przekazany }}>
                         <input type="hidden" id="zgloszenie_text" name="zgloszenie" value={{ zgloszenia.id }}>
                         <button type="submit" class="btn btn-outline-primary waves-effect btn-sm" name="btn_form_komentarz">Zapisz <i class="fas fa-save fa-lg"></i></button>
                     </form>

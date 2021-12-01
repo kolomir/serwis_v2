@@ -1,0 +1,104 @@
+{% extends 'serwis/base.html' %}
+{% load bootstrap %}
+{% block content %}
+
+            <div class="row justify-content-md-center">
+                <div class="col-xl-6 col-md-6">
+                    <h5><strong>Zgłoszenie nr #{{ zgloszenia.id }} </strong><small><em>(archiwalne)</em></small></h5>
+                    <hr class="red title-hr">
+                    <div class="row">
+                        <div class="col-md-2">Temat</div>
+                        <div class="col-md-10">{{ zgloszenia.temat_zgloszenia }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">Opis</div>
+                        <div class="col-md-10">{{ zgloszenia.opis_zgloszenia }}</div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-2">
+                            <small><em>Rodzaj usterki</em></small>
+                        </div>
+                        <div class="col-md-4">
+                            <small>{{ zgloszenia.rodzaj_usterki }}</small>
+                        </div>
+                        <div class="col-md-2">
+                            <small><em>Maszyna</em></small>
+                        </div>
+                        <div class="col-md-4">
+                            <small>{{ zgloszenia.urzadzenie }}</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12"><small><em>Data i czas zgloszenia</em></small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><small>{{ zgloszenia.data_zgloszenia }}<br />{{ zgloszenia.czas_zgloszenia }}</small></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12"><small><em>Zgłaszający</em></small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><small>{{ zgloszenia.zglaszajacy }}</small></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12"><small><em>Data i czas otwarcia</em></small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><small>
+                                    {% if zgloszenia.status == 1 %}
+                                    -- ---- ---- <br /> --:--
+                                    {% else %}
+                                    {{ zgloszenia.data_otwarcia }} <br />{{ zgloszenia.czas_otwarcia }}
+                                    {% endif %}
+                                </small></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12"><small><em>Serwisant</em></small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><small>{{ zgloszenia.serwisant }}</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+            <div class="row justify-content-md-center">
+                <div class="col-xl-6 col-md-6">
+                    <h5><strong>Wiadomości i komentarze</strong></h5>
+                    <hr class="red title-hr">
+                    {% for wpis in komentarze %}
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12 text-center"><small>Napisał</small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center"><small><strong><em><b>{{ wpis.autor }}</b></em></strong></small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center"><small>Data i czas wpisu</small></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center"><small><em><strong><b>{{ wpis.data_wpisu }}<br />{{ wpis.czas_wpisu }}</b></strong></em></small></div>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            {{ wpis.tresc }}
+                        </div>
+                    </div>
+                    <br />
+                    {% endfor %}
+                </div>
+            </div>
+
+{% endblock content %}
