@@ -97,28 +97,30 @@ def wpis_zamkniete_szczegoly(request, id):
 #---------------------------------------------------
 def wpisy(request):
     nowe_zgloszenia = Zgloszenie.objects.filter(status=1).order_by('data_zgloszenia', 'czas_zgloszenia')
+    otwarte_zgloszenia = Zgloszenie.objects.filter(status__gte=2,status__lte=4).order_by('data_zgloszenia', 'czas_zgloszenia')
     #- czy serwisant ---------
     if request.user.is_authenticated:
         zglaszajacy_wpisy = get_author(request.user)
         lista_userow = get_user_model()
         zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
         serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
-        wyslij = int(serwisy.serwis)
+        serwisant = int(serwisy.serwis)
         zgloszenia_zglaszajacy = Zgloszenie.objects.filter(status__gte=2,status__lte=4).filter(zglaszajacy=zglaszajacy_wpisy.id).order_by('status')
         zgloszenia_serwis = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).filter(status__gte=2,status__lt=4).order_by('status','data_zgloszenia', 'czas_zgloszenia')
     else:
         zgloszenia_zglaszajacy = ""
         zgloszenia_serwis = ""
-        wyslij = ""
+        serwisant = ""
 
     zgloszenia = Zgloszenie.objects.filter(status__lte=4).order_by('data_zgloszenia', 'czas_zgloszenia')
 
     context = {
         'zgloszenia': zgloszenia,
         'nowe_zgloszenia': nowe_zgloszenia,
+        'otwarte_zgloszenia': otwarte_zgloszenia,
         'zgloszenia_zglaszajacy': zgloszenia_zglaszajacy,
         'zgloszenia_serwis': zgloszenia_serwis,
-        'wyslij': wyslij,
+        'serwisant': serwisant,
     }
     return render(request, 'serwis/wpisy.html', context)
 
@@ -202,6 +204,14 @@ def wpis_szczegoly(request, id):
     if request.method == 'POST' and 'btn_form_wykonane' in request.POST:
 
         if form_wykonanie_zgloszenia.is_valid():
+            zglaszajacy = request.POST.get('zglaszajacy')
+            serw = request.POST.get('serwisant_txt')
+            if zglaszajacy == serw:
+                status = '5'
+                form_wykonanie_zgloszenia.instance.data_zamkniecia = request.POST.get('data_przekazana')
+                form_wykonanie_zgloszenia.instance.czas_zamkniecia = request.POST.get('czas_przekazany')
+            else:
+                print('jeszcze nie')
             form_wykonanie_zgloszenia.instance.data_wykonania = request.POST.get('data_przekazana')
             form_wykonanie_zgloszenia.instance.czas_wykonania = request.POST.get('czas_przekazany')
             form_wykonanie_zgloszenia.instance.status = status
@@ -209,9 +219,12 @@ def wpis_szczegoly(request, id):
             print(
                 'data_otwarcia:', data_przekazana,
                 ' ; czas_otwarcia:', czas_przekazany,
-                ' ; status:', status)
+                ' ; status:', status,
+                ' ; zglaszajacy: ',zglaszajacy,
+                ' ; serwisant: ', serw
+                )
             print('>>---------------<<')
-            form_wykonanie_zgloszenia.save()
+            #form_wykonanie_zgloszenia.save()
             return redirect(wpisy)
 
     if request.method == 'POST' and 'btn_form_wstrzymane' in request.POST:

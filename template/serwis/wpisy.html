@@ -2,279 +2,355 @@
 {% load bootstrap %}
 {% block content %}
     {% if user.is_authenticated %}
-            <div class="row">
-                <div class="col-xl-12 col-md-12 dystans">
-                    <h5><strong>Nowe zgłoszenia</strong></h5>
-                    <hr class="red title-hr">
-                    <table id="dtNoweWpisy" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
-                    <thead class="black white-text">
-                        <tr>
-                            <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">Data i czas zgłoszenia</th>
-                            <th class="th-sm">Temat</th>
-                            <th class="th-sm">Maszyna</th>
-                            <th class="th-sm">Status</th>
-                            <th class="th-sm">Serwisant</th>
-                            {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+        <div class="row">
+            <div class="col-xl-12 col-md-12 dystans">
+                <h5><strong>Nowe zgłoszenia</strong></h5>
+                <hr class="red title-hr">
+                <table id="dtNoweWpisy" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
+                <thead class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Zgłaszający</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for wpis in nowe_zgloszenia %}
+                    <tr>
+                        <th scope="row">{{ wpis.id }}</th>
+                        <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
+                        <td>{{ wpis.temat_zgloszenia }}</td>
+                        <td>{{ wpis.urzadzenie }}</td>
+                        <td>
+                            {% if wpis.status == 1 %}
+                            Nowe zgłoszenie
                             {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for wpis in nowe_zgloszenia %}
-                        <tr>
-                            <th scope="row">{{ wpis.id }}</th>
-                            <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
-                            <td>{{ wpis.temat_zgloszenia }}</td>
-                            <td>{{ wpis.urzadzenie }}</td>
-                            <td>
-                                {% if wpis.status == 1 %}
-                                Nowe zgłoszenie
-                                {% endif %}
-                                {% if wpis.status == 2 %}
-                                Otwarte
-                                {% endif %}
-                                {% if wpis.status == 3 %}
-                                Czeka na wyjaśnienie
-                                {% endif %}
-                                {% if wpis.status == 4 %}
-                                Wykonany
-                                {% endif %}
-                                {% if wpis.status == 5 %}
-                                Zamknięty
-                                {% endif %}
-                                {% if wpis.status == 6 %}
-                                Anulowany
-                                {% endif %}
-                            </td>
-                            <td>{{ wpis.serwisant }}</td>
-                            {% if user.is_authenticated %}
-                            <td>
-                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
-                            </td>
+                            {% if wpis.status == 2 %}
+                            Otwarte
                             {% endif %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot class="black white-text">
-                        <tr>
-                            <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">Data i czas zgłoszenia</th>
-                            <th class="th-sm">Temat</th>
-                            <th class="th-sm">Maszyna</th>
-                            <th class="th-sm">Status</th>
-                            <th class="th-sm">Serwisant</th>
-                            {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+                            {% if wpis.status == 3 %}
+                            Czeka na wyjaśnienie
                             {% endif %}
-                        </tr>
-                    </tfoot>
-                </table>
-                </div>
+                            {% if wpis.status == 4 %}
+                            Wykonany
+                            {% endif %}
+                            {% if wpis.status == 5 %}
+                            Zamknięty
+                            {% endif %}
+                            {% if wpis.status == 6 %}
+                            Anulowany
+                            {% endif %}
+                        </td>
+                        <td>{{ wpis.zglaszajacy }}</td>
+                        {% if user.is_authenticated %}
+                        <td>
+                            <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Zgłaszający</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </tfoot>
+            </table>
             </div>
-            <div class="row">
-                <div class="col-xl-12 col-md-12 dystans">
-                    <h5><strong>Twoje zgłoszenia</strong></h5>
-                    <hr class="red title-hr">
-                    <table id="dtTwojeWpisy_serwis" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
-                    <thead class="black white-text">
-                        <tr>
-                            <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">Data i czas zgłoszenia</th>
-                            <th class="th-sm">Temat</th>
-                            <th class="th-sm">Maszyna</th>
-                            <th class="th-sm">Status</th>
-                            <th class="th-sm">Serwisant</th>
-                            {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+        </div>
+        {% if serwisant == 1 %}
+        <div class="row">
+            <div class="col-xl-12 col-md-12 dystans">
+                <h5><strong>Twoje zgłoszenia</strong></h5>
+                <hr class="red title-hr">
+                <table id="dtTwojeWpisy_serwis" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
+                <thead class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Zgłaszający</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for wpis in zgloszenia_serwis %}
+                    <tr>
+                        <th scope="row">{{ wpis.id }}</th>
+                        <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
+                        <td>{{ wpis.temat_zgloszenia }}</td>
+                        <td>{{ wpis.urzadzenie }}</td>
+                        <td>
+                            {% if wpis.status == 1 %}
+                            Nowe zgłoszenie
                             {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for wpis in zgloszenia_serwis %}
-                        <tr>
-                            <th scope="row">{{ wpis.id }}</th>
-                            <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
-                            <td>{{ wpis.temat_zgloszenia }}</td>
-                            <td>{{ wpis.urzadzenie }}</td>
-                            <td>
-                                {% if wpis.status == 1 %}
-                                Nowe zgłoszenie
-                                {% endif %}
-                                {% if wpis.status == 2 %}
-                                Otwarte
-                                {% endif %}
-                                {% if wpis.status == 3 %}
-                                Czeka na wyjaśnienie
-                                {% endif %}
-                                {% if wpis.status == 4 %}
-                                Wykonany
-                                {% endif %}
-                                {% if wpis.status == 5 %}
-                                Zamknięty
-                                {% endif %}
-                                {% if wpis.status == 6 %}
-                                Anulowany
-                                {% endif %}
-                            </td>
-                            <td>{{ wpis.serwisant }}</td>
-                            {% if user.is_authenticated %}
-                            <td>
-                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
-                            </td>
+                            {% if wpis.status == 2 %}
+                            Otwarte
                             {% endif %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot class="black white-text">
-                        <tr>
-                            <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">Data i czas zgłoszenia</th>
-                            <th class="th-sm">Temat</th>
-                            <th class="th-sm">Maszyna</th>
-                            <th class="th-sm">Status</th>
-                            <th class="th-sm">Serwisant</th>
-                            {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+                            {% if wpis.status == 3 %}
+                            Czeka na wyjaśnienie
                             {% endif %}
-                        </tr>
-                    </tfoot>
-                </table>
-                </div>
+                            {% if wpis.status == 4 %}
+                            Wykonany
+                            {% endif %}
+                            {% if wpis.status == 5 %}
+                            Zamknięty
+                            {% endif %}
+                            {% if wpis.status == 6 %}
+                            Anulowany
+                            {% endif %}
+                        </td>
+                        <td>{{ wpis.zglaszajacy }}</td>
+                        {% if user.is_authenticated %}
+                        <td>
+                            <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Zgłaszający</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </tfoot>
+            </table>
             </div>
-            <div class="row">
-                <div class="col-xl-12 col-md-12 dystans">
-                    <h5><strong>Twoje zgłoszenia</strong></h5>
-                    <hr class="red title-hr">
-                    <table id="dtTwojeWpisy_autor" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
-                    <thead class="black white-text">
-                        <tr>
-                            <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">Data i czas zgłoszenia</th>
-                            <th class="th-sm">Temat</th>
-                            <th class="th-sm">Maszyna</th>
-                            <th class="th-sm">Status</th>
-                            <th class="th-sm">Serwisant</th>
-                            {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-xl-12 col-md-12 dystans">
+                <h5><strong>Twoje zgłoszenia</strong></h5>
+                <hr class="red title-hr">
+                <table id="dtTwojeWpisy_autor" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
+                <thead class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Serwisant</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for wpis in zgloszenia_zglaszajacy %}
+                    <tr>
+                        <th scope="row">{{ wpis.id }}</th>
+                        <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
+                        <td>{{ wpis.temat_zgloszenia }}</td>
+                        <td>{{ wpis.urzadzenie }}</td>
+                        <td>
+                            {% if wpis.status == 1 %}
+                            Nowe zgłoszenie
                             {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for wpis in zgloszenia_zglaszajacy %}
-                        <tr>
-                            <th scope="row">{{ wpis.id }}</th>
-                            <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
-                            <td>{{ wpis.temat_zgloszenia }}</td>
-                            <td>{{ wpis.urzadzenie }}</td>
-                            <td>
-                                {% if wpis.status == 1 %}
-                                Nowe zgłoszenie
-                                {% endif %}
-                                {% if wpis.status == 2 %}
-                                Otwarte
-                                {% endif %}
-                                {% if wpis.status == 3 %}
-                                Czeka na wyjaśnienie
-                                {% endif %}
-                                {% if wpis.status == 4 %}
-                                Wykonany
-                                {% endif %}
-                                {% if wpis.status == 5 %}
-                                Zamknięty
-                                {% endif %}
-                                {% if wpis.status == 6 %}
-                                Anulowany
-                                {% endif %}
-                            </td>
-                            <td>{{ wpis.serwisant }}</td>
-                            {% if user.is_authenticated %}
-                            <td>
-                                <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
-                            </td>
+                            {% if wpis.status == 2 %}
+                            Otwarte
                             {% endif %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot class="black white-text">
-                        <tr>
-                            <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">Data i czas zgłoszenia</th>
-                            <th class="th-sm">Temat</th>
-                            <th class="th-sm">Maszyna</th>
-                            <th class="th-sm">Status</th>
-                            <th class="th-sm">Serwisant</th>
-                            {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+                            {% if wpis.status == 3 %}
+                            Czeka na wyjaśnienie
                             {% endif %}
-                        </tr>
-                    </tfoot>
-                </table>
-                </div>
+                            {% if wpis.status == 4 %}
+                            Wykonany
+                            {% endif %}
+                            {% if wpis.status == 5 %}
+                            Zamknięty
+                            {% endif %}
+                            {% if wpis.status == 6 %}
+                            Anulowany
+                            {% endif %}
+                        </td>
+                        <td>{{ wpis.serwisant }}</td>
+                        {% if user.is_authenticated %}
+                        <td>
+                            <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Serwisant</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </tfoot>
+            </table>
             </div>
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-xl-12 col-md-12 dystans">
+                <h5><strong>Wszystkie otwarte zgłoszenia</strong></h5>
+                <hr class="red title-hr">
+                <table id="dtOtwarteWpisy" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
+                <thead class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Zgłaszający</th>
+                        <th class="th-sm">Serwisant</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for wpis in otwarte_zgloszenia %}
+                    <tr>
+                        <th scope="row">{{ wpis.id }}</th>
+                        <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
+                        <td>{{ wpis.temat_zgloszenia }}</td>
+                        <td>{{ wpis.urzadzenie }}</td>
+                        <td>
+                            {% if wpis.status == 1 %}
+                            Nowe zgłoszenie
+                            {% endif %}
+                            {% if wpis.status == 2 %}
+                            Otwarte
+                            {% endif %}
+                            {% if wpis.status == 3 %}
+                            Czeka na wyjaśnienie
+                            {% endif %}
+                            {% if wpis.status == 4 %}
+                            Wykonany
+                            {% endif %}
+                            {% if wpis.status == 5 %}
+                            Zamknięty
+                            {% endif %}
+                            {% if wpis.status == 6 %}
+                            Anulowany
+                            {% endif %}
+                        </td>
+                        <td>{{ wpis.zglaszajacy }}</td>
+                        <td>{{ wpis.serwisant }}</td>
+                        {% if user.is_authenticated %}
+                        <td>
+                            <a href="{% url 'wpis_szczegoly' wpis.id %}" class="btn btn-outline-info waves-effect btn-sm">Szczegóły</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Zgłaszający</th>
+                        <th class="th-sm">Serwisant</th>
+                        {% if user.is_authenticated %}
+                        <th class="th-sm" width="15%"># Opcje</th>
+                        {% endif %}
+                    </tr>
+                </tfoot>
+            </table>
+            </div>
+        </div>
     {% else %}
-            <div class="row">
-                <div class="col-xl-12 col-md-12 dystans">
-                    <h5><strong>Zgłoszenia</strong></h5>
-                    <hr class="red title-hr">
-                    <table id="dtWpisy" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
-                    <thead class="black white-text">
-                        <tr>
-                            <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">Data i czas zgłoszenia</th>
-                            <th class="th-sm">Temat</th>
-                            <th class="th-sm">Maszyna</th>
-                            <th class="th-sm">Status</th>
-                            <th class="th-sm">Zgłaszający</th>
-                            <th class="th-sm">Serwisant</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for wpis in zgloszenia %}
-                        <tr>
-                            <th scope="row">{{ wpis.id }}</th>
-                            <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
-                            <td>{{ wpis.temat_zgloszenia }}</td>
-                            <td>{{ wpis.urzadzenie }}</td>
-                            <td>
-                                {% if wpis.status == 1 %}
-                                Nowe zgłoszenie
-                                {% endif %}
-                                {% if wpis.status == 2 %}
-                                Otwarte
-                                {% endif %}
-                                {% if wpis.status == 3 %}
-                                Czeka na wyjaśnienie
-                                {% endif %}
-                                {% if wpis.status == 4 %}
-                                Wykonany
-                                {% endif %}
-                                {% if wpis.status == 5 %}
-                                Zamknięty
-                                {% endif %}
-                                {% if wpis.status == 6 %}
-                                Anulowany
-                                {% endif %}
-                            </td>
-                            <td>{{ wpis.zglaszajacy }}</td>
-                            <td>{{ wpis.serwisant }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot class="black white-text">
-                        <tr>
-                            <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">Data i czas zgłoszenia</th>
-                            <th class="th-sm">Temat</th>
-                            <th class="th-sm">Maszyna</th>
-                            <th class="th-sm">Status</th>
-                            <th class="th-sm">Zgłaszający</th>
-                            <th class="th-sm">Serwisant</th>
-                        </tr>
-                    </tfoot>
-                </table>
-                </div>
+        <div class="row">
+            <div class="col-xl-12 col-md-12 dystans">
+                <h5><strong>Zgłoszenia</strong></h5>
+                <hr class="red title-hr">
+                <table id="dtWpisy" class="table table-striped table-hover table-sm table-borderless" cellspacing="0" width="100%">
+                <thead class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Zgłaszający</th>
+                        <th class="th-sm">Serwisant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for wpis in zgloszenia %}
+                    <tr>
+                        <th scope="row">{{ wpis.id }}</th>
+                        <td>{{ wpis.data_zgloszenia }} {{ wpis.czas_zgloszenia }}</td>
+                        <td>{{ wpis.temat_zgloszenia }}</td>
+                        <td>{{ wpis.urzadzenie }}</td>
+                        <td>
+                            {% if wpis.status == 1 %}
+                            Nowe zgłoszenie
+                            {% endif %}
+                            {% if wpis.status == 2 %}
+                            Otwarte
+                            {% endif %}
+                            {% if wpis.status == 3 %}
+                            Czeka na wyjaśnienie
+                            {% endif %}
+                            {% if wpis.status == 4 %}
+                            Wykonany
+                            {% endif %}
+                            {% if wpis.status == 5 %}
+                            Zamknięty
+                            {% endif %}
+                            {% if wpis.status == 6 %}
+                            Anulowany
+                            {% endif %}
+                        </td>
+                        <td>{{ wpis.zglaszajacy }}</td>
+                        <td>{{ wpis.serwisant }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="black white-text">
+                    <tr>
+                        <th class="th-sm" width="5%">#</th>
+                        <th class="th-sm">Data i czas zgłoszenia</th>
+                        <th class="th-sm">Temat</th>
+                        <th class="th-sm">Maszyna</th>
+                        <th class="th-sm">Status</th>
+                        <th class="th-sm">Zgłaszający</th>
+                        <th class="th-sm">Serwisant</th>
+                    </tr>
+                </tfoot>
+            </table>
             </div>
+        </div>
     {% endif %}
 
 {% endblock content %}
