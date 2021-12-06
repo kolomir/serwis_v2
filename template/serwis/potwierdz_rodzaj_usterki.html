@@ -1,0 +1,21 @@
+{% extends 'serwis/base.html' %}
+{% load bootstrap %}
+{% block content %}
+
+        <div class="row justify-content-md-center">
+            <div class="col-xl-6 col-md-6">
+                <h5><strong>Usunięcie pozycji nr #{{ wpis.id }}</strong></h5>
+                <hr class="red title-hr">
+                <h4>Czy napewno chcesz usunąć rodzaj usterki:</h4> <h2>{{ wpis.rodzaj_usterki }} ??</h2>
+                <form method="POST" role="form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="hidden" name="aktywny" value="0">
+                        <button type="submit" class="btn btn-outline-danger waves-effect btn-sm">Tak <i class="far fa-check-square"></i></button>
+                        <a class="btn btn-outline-success waves-effect btn-sm" href="/nowy_rodzaj_usterki/" role="button">Nie <i class="fas fa-times"></i></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+{% endblock content %}

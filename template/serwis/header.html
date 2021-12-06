@@ -11,10 +11,12 @@
                         <a class="nav-link" href="/">Wpisy</a>
                     </li>
                     {% if user.is_authenticated %}
+                        {% if serwisant == 0 %}
                         <li class="nav-item">
                             <a class="nav-link" href="/nowe_zgloszenie">Nowe zgłoszenie</a>
                         </li>
-                        {% if wyslij == 1 %}
+                        {% endif %}
+                        {% if serwisant == 1 %}
                         <!-- Dropdown -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLinkListy" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Przeglądaj</a>

@@ -20,6 +20,14 @@ class RodzajUsterkiForm(ModelForm):
         ]
 
 
+class KasujRodzajUsterki(ModelForm):
+    class Meta:
+        model = RodzajUsterki
+        fields = [
+            'aktywny',
+        ]
+
+
 class UrzadzenieForm(ModelForm):
     class Meta:
         model = Urzadzenie

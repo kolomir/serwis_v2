@@ -30,7 +30,7 @@
                             <th class="th-sm" width="5%">#</th>
                             <th class="th-sm">dzial</th>
                             {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+                            <th class="th-sm" width="25%"># Opcje</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -41,7 +41,10 @@
                             <td>{{ wpis.rodzaj_usterki }}</td>
                             {% if user.is_authenticated %}
                             <td>
-
+                                <a href="{% url 'edytuj_RodzajUsterek' wpis.id %}" class="btn btn-outline-primary waves-effect btn-sm mr-2">Edytuj</a>
+                                {% if wpis.aktywny == 1 %}
+                                <a href="{% url 'potwierdz_rodzaj_usterki' wpis.id %}" class="btn btn-outline-danger waves-effect btn-sm">Usuń</a>
+                                {% endif %}
                             </td>
                             {% endif %}
                         </tr>
@@ -49,10 +52,10 @@
                     </tbody>
                     <tfoot class="black white-text">
                         <tr>
-                            <th class="th-sm" width="5%">#</th>
+                            <th class="th-sm">#</th>
                             <th class="th-sm">dzial</th>
                             {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+                            <th class="th-sm"># Opcje</th>
                             {% endif %}
                         </tr>
                     </tfoot>

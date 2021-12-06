@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import nowy_RodzajUsterek, nowe_Urzadzenie, nowy_serwisant, nowe_zgloszenie, login_request, logout_request, wpisy, wpis_szczegoly, autorzy, anuluj_zgloszenie, zakoncz_zgloszenie, wpis_zamkniete, wpis_zamkniete_szczegoly
+from .views import nowy_RodzajUsterek, edytuj_RodzajUsterek, usun_RodzajUsterek, nowe_Urzadzenie, nowy_serwisant, nowe_zgloszenie, login_request, logout_request, wpisy, wpis_szczegoly, autorzy, anuluj_zgloszenie, zakoncz_zgloszenie, wpis_zamkniete, wpis_zamkniete_szczegoly
 
 
 urlpatterns = [
@@ -11,8 +11,11 @@ urlpatterns = [
         path('nowy_serwisant/', nowy_serwisant, name='nowy_serwisant'),
         path('zamkniete/', wpis_zamkniete, name='wpis_zamkniete'),
         path('zgloszenie_hist/<int:id>/', wpis_zamkniete_szczegoly, name='wpis_zamkniete_szczegoly'),
+        #- EDYTOWANIE ----------------------------------------------------------
+        path('edytuj_rodzaj_usterki/<int:id>/', edytuj_RodzajUsterek, name='edytuj_RodzajUsterek'),
         #- KASOWANIE -----------------------------------------------------------
         path('potwierdz_anuluj_zgloszenie/<int:id>/', anuluj_zgloszenie, name='anuluj_zgloszenie'),
+        path('potwierdz_rodzaj_usterki/<int:id>/', usun_RodzajUsterek, name='potwierdz_rodzaj_usterki'),
         #- ZAKONCZENIE ---------------------------------------------------------
         path('potwierdz_zakoncz_zgloszenie/<int:id>/', zakoncz_zgloszenie, name='zakoncz_zgloszenie'),
         #- SYSTEM --------------------------------------------------------------

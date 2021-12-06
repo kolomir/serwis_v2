@@ -102,8 +102,6 @@
                                     <form method="post" role="form" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <input type="hidden" id="status_text" name="status" value=4>
-                                        <input type="hidden" id="zglaszajacy_text" name="zglaszajacy" value={{ zgloszenia.zglaszajacy }}>
-                                        <input type="hidden" id="serwisant_text" name="serwisant_txt" value={{ zgloszenia.serwisant }}>
                                         <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
                                         <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
                                         <button type="submit" class="btn btn-outline-primary waves-effect btn-sm" name="btn_form_wykonane">Wykonane <i class="fas fa-save fa-lg"></i></button>

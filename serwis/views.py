@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie, Comments
-from .forms import RodzajUsterkiForm, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm, AnulowacZgloszenie, WykonanieZgloszenie, ZawieszenieZgloszenia
+from .forms import RodzajUsterkiForm, KasujRodzajUsterki, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm, AnulowacZgloszenie, WykonanieZgloszenie, ZawieszenieZgloszenia
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
@@ -37,6 +37,38 @@ def nowy_RodzajUsterek(request):
         'rodzaj_usterki': rodzaj_usterki
     }
     return render(request, 'serwis/nowy_rodzaj_usterki.html', context)
+
+
+@login_required
+def edytuj_RodzajUsterek(request, id):
+    wpis = get_object_or_404(RodzajUsterki, pk=id)
+    form_RodzajUsterki = RodzajUsterkiForm(request.POST or None, request.FILES or None, instance=wpis)
+
+    if form_RodzajUsterki.is_valid():
+        form_RodzajUsterki.save()
+        return redirect(nowy_RodzajUsterek)
+
+    context = {
+        'form_RodzajUsterki': form_RodzajUsterki,
+    }
+    return render(request, 'serwis/edytuj_rodzaj_usterki.html', context)
+
+
+@login_required
+def usun_RodzajUsterek(request, id):
+    wpis = get_object_or_404(RodzajUsterki, pk=id)
+    form_RodzajUsterki = KasujRodzajUsterki(request.POST or None, request.FILES or None, instance=wpis)
+
+    if form_RodzajUsterki.is_valid():
+        kasuj = form_RodzajUsterki.save(commit=False)
+        kasuj.aktywny = '0'
+        kasuj.save()
+        return redirect(nowy_RodzajUsterek)
+
+    context = {
+        'wpis': wpis,
+    }
+    return render(request, 'serwis/potwierdz_rodzaj_usterki.html', context)
 
 
 #---------------------------------------------------
@@ -204,14 +236,6 @@ def wpis_szczegoly(request, id):
     if request.method == 'POST' and 'btn_form_wykonane' in request.POST:
 
         if form_wykonanie_zgloszenia.is_valid():
-            zglaszajacy = request.POST.get('zglaszajacy')
-            serw = request.POST.get('serwisant_txt')
-            if zglaszajacy == serw:
-                status = '5'
-                form_wykonanie_zgloszenia.instance.data_zamkniecia = request.POST.get('data_przekazana')
-                form_wykonanie_zgloszenia.instance.czas_zamkniecia = request.POST.get('czas_przekazany')
-            else:
-                print('jeszcze nie')
             form_wykonanie_zgloszenia.instance.data_wykonania = request.POST.get('data_przekazana')
             form_wykonanie_zgloszenia.instance.czas_wykonania = request.POST.get('czas_przekazany')
             form_wykonanie_zgloszenia.instance.status = status
@@ -220,11 +244,9 @@ def wpis_szczegoly(request, id):
                 'data_otwarcia:', data_przekazana,
                 ' ; czas_otwarcia:', czas_przekazany,
                 ' ; status:', status,
-                ' ; zglaszajacy: ',zglaszajacy,
-                ' ; serwisant: ', serw
                 )
             print('>>---------------<<')
-            #form_wykonanie_zgloszenia.save()
+            form_wykonanie_zgloszenia.save()
             return redirect(wpisy)
 
     if request.method == 'POST' and 'btn_form_wstrzymane' in request.POST:
