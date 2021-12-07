@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie, Comments
-from .forms import RodzajUsterkiForm, KasujRodzajUsterki, UrzadzenieForm, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm, AnulowacZgloszenie, WykonanieZgloszenie, ZawieszenieZgloszenia
+from .forms import RodzajUsterkiForm, KasujRodzajUsterki, UrzadzenieForm, KasujUrzadzenie, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm, AnulowacZgloszenie, WykonanieZgloszenie, ZawieszenieZgloszenia
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
@@ -50,6 +50,7 @@ def edytuj_RodzajUsterek(request, id):
 
     context = {
         'form_RodzajUsterki': form_RodzajUsterki,
+        'wpis':wpis,
     }
     return render(request, 'serwis/edytuj_rodzaj_usterki.html', context)
 
@@ -71,6 +72,23 @@ def usun_RodzajUsterek(request, id):
     return render(request, 'serwis/potwierdz_rodzaj_usterki.html', context)
 
 
+@login_required
+def przywroc_RodzajUsterek(request, id):
+    wpis = get_object_or_404(RodzajUsterki, pk=id)
+    form_RodzajUsterki = KasujRodzajUsterki(request.POST or None, request.FILES or None, instance=wpis)
+
+    if form_RodzajUsterki.is_valid():
+        kasuj = form_RodzajUsterki.save(commit=False)
+        kasuj.aktywny = '1'
+        kasuj.save()
+        return redirect(nowy_RodzajUsterek)
+
+    context = {
+        'wpis': wpis,
+    }
+    return render(request, 'serwis/potwierdz_rodzaj_usterki.html', context)
+
+
 #---------------------------------------------------
 #  Formularz do wprowadzania Maszyn i Urządzeń do bazy
 #---------------------------------------------------
@@ -78,9 +96,6 @@ def usun_RodzajUsterek(request, id):
 def nowe_Urzadzenie(request):
     form_Urzadzenia = UrzadzenieForm(request.POST or None, request.FILES or None)
     urzadzenia = Urzadzenie.objects.all().order_by('nazwa_urzadzenia')
-
-    #test = request.POST.get('nazwa_urzadzenia')
-    #print('test --> ', test)
 
     if form_Urzadzenia.is_valid():
         form_Urzadzenia.save()
@@ -91,6 +106,57 @@ def nowe_Urzadzenie(request):
         'urzadzenia': urzadzenia
     }
     return render(request, 'serwis/nowe_urzadzenia.html', context)
+
+
+@login_required
+def edytuj_Urzadzenie(request, id):
+    wpis = get_object_or_404(Urzadzenie, pk=id)
+    form_Urzadzenie = UrzadzenieForm(request.POST or None, request.FILES or None, instance=wpis)
+
+    if form_Urzadzenie.is_valid():
+        form_Urzadzenie.save()
+        return redirect(nowe_Urzadzenie)
+
+    context = {
+        'form_Urzadzenie': form_Urzadzenie,
+        'wpis':wpis,
+    }
+    return render(request, 'serwis/edytuj_urzadzenia.html', context)
+
+
+@login_required
+def usun_Urzadzenie(request, id):
+    wpis = get_object_or_404(Urzadzenie, pk=id)
+    form_Urzadzenie = KasujUrzadzenie(request.POST or None, request.FILES or None, instance=wpis)
+
+    if form_Urzadzenie.is_valid():
+        kasuj = form_Urzadzenie.save(commit=False)
+        kasuj.aktywny = '0'
+        kasuj.save()
+        return redirect(nowe_Urzadzenie)
+
+    context = {
+        'wpis': wpis,
+    }
+    return render(request, 'serwis/potwierdz_urzadzenie.html', context)
+
+
+@login_required
+def przywroc_Urzadzenie(request, id):
+    wpis = get_object_or_404(Urzadzenie, pk=id)
+    form_Urzadzenie = KasujUrzadzenie(request.POST or None, request.FILES or None, instance=wpis)
+
+    if form_Urzadzenie.is_valid():
+        kasuj = form_Urzadzenie.save(commit=False)
+        kasuj.aktywny = '1'
+        kasuj.save()
+        return redirect(nowe_Urzadzenie)
+
+    context = {
+        'wpis': wpis,
+    }
+    return render(request, 'serwis/potwierdz_urzadzenie.html', context)
+
 
 
 #---------------------------------------------------

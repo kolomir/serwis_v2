@@ -28,9 +28,9 @@
                     <thead class="black white-text">
                         <tr>
                             <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">dzial</th>
+                            <th class="th-sm">Nazwa urządzenia</th>
                             {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+                            <th class="th-sm" width="30%"># Opcje</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -41,7 +41,12 @@
                             <td>{{ wpis.nazwa_urzadzenia }}</td>
                             {% if user.is_authenticated %}
                             <td>
-
+                                <a href="{% url 'edytuj_Urzadzenie' wpis.id %}" class="btn btn-outline-primary waves-effect btn-sm mr-2">Edytuj</a>
+                                {% if wpis.aktywny == 1 %}
+                                <a href="{% url 'usun_Urzadzenie' wpis.id %}" class="btn btn-outline-danger waves-effect btn-sm">Usuń</a>
+                                {% else %}
+                                <a href="{% url 'przywroc_Urzadzenie' wpis.id %}" class="btn btn-outline-success waves-effect btn-sm">Przywróć</a>
+                                {% endif %}
                             </td>
                             {% endif %}
                         </tr>
@@ -50,9 +55,9 @@
                     <tfoot class="black white-text">
                         <tr>
                             <th class="th-sm" width="5%">#</th>
-                            <th class="th-sm">dzial</th>
+                            <th class="th-sm">Nazwa urządzenia</th>
                             {% if user.is_authenticated %}
-                            <th class="th-sm" width="15%"># Opcje</th>
+                            <th class="th-sm"># Opcje</th>
                             {% endif %}
                         </tr>
                     </tfoot>

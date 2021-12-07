@@ -5,20 +5,20 @@
         <div class="row justify-content-md-center">
             <div class="col-xl-6 col-md-6">
                 {% if wpis.aktywny %}
-                    <h5><strong>Usunięcie pozycji nr #{{ wpis.id }}</strong></h5>
+                    <h5><strong>Usunięcie urządzenia - id #{{ wpis.id }}</strong></h5>
                     <hr class="red title-hr">
-                    <h4>Czy napewno chcesz usunąć rodzaj usterki:</h4> <h2>{{ wpis.rodzaj_usterki }} ??</h2>
+                    <h4>Czy napewno chcesz usunąć urządzenie:</h4> <h2>{{ wpis.nazwa_urzadzenia }} ??</h2>
                 {% else %}
-                    <h5><strong>Przywrócenie pozycji nr #{{ wpis.id }}</strong></h5>
+                    <h5><strong>Przywrócenie irządzenia - id #{{ wpis.id }}</strong></h5>
                     <hr class="red title-hr">
-                    <h4>Czy napewno chcesz przywrócić rodzaj usterki:</h4> <h2>{{ wpis.rodzaj_usterki }} ??</h2>
+                    <h4>Czy napewno chcesz przywrócić urządzenie:</h4> <h2>{{ wpis.nazwa_urzadzenia }} ??</h2>
                 {% endif %}
                 <form method="POST" role="form" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         <input type="hidden" name="aktywny" value="0">
                         <button type="submit" class="btn btn-outline-danger waves-effect btn-sm">Tak <i class="far fa-check-square"></i></button>
-                        <a class="btn btn-outline-success waves-effect btn-sm" href="/nowy_rodzaj_usterki/" role="button">Nie <i class="fas fa-times"></i></a>
+                        <a class="btn btn-outline-success waves-effect btn-sm" href="/nowe_urzadzenie/" role="button">Nie <i class="fas fa-times"></i></a>
                     </div>
                 </form>
             </div>

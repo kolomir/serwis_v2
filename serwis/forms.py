@@ -37,6 +37,14 @@ class UrzadzenieForm(ModelForm):
         ]
 
 
+class KasujUrzadzenie(ModelForm):
+    class Meta:
+        model = Urzadzenie
+        fields = [
+            'aktywny',
+        ]
+
+
 class SerwisantForm(ModelForm):
     class Meta:
         model = Serwisant

@@ -1,0 +1,23 @@
+{% extends 'serwis/base.html' %}
+{% load bootstrap %}
+{% block content %}
+
+        <div class="row justify-content-md-center">
+            <div class="col-xl-6 col-md-6 dystans">
+                <h5><strong>Edytuj urządzenie</strong></h5>
+                <hr class="red title-hr">
+                <form method="post" role="form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="md-form md-outline">
+                        <label for="input_urzadzenie">Nazwa urządzenia</label>
+                        <input type="text" class="form-control" id="input_urzadzenie" name="nazwa_urzadzenia" required value="{{ wpis.nazwa_urzadzenia }}">
+                    </div>
+                    <div class="md-form md-outline">
+                        <input type="hidden" name="aktywny" value="1">
+                        <button type="submit" class="btn btn-outline-primary waves-effect btn-sm">Zapisz <i class="fas fa-save fa-lg"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+{% endblock content %}
