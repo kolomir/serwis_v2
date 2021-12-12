@@ -1,0 +1,43 @@
+{% extends 'serwis/base.html' %}
+{% load bootstrap %}
+{% block content %}
+
+        <div class="row justify-content-md-center">
+            <div class="col-xl-6 col-md-6">
+                <h5><strong>Eksport danych</strong></h5>
+                <hr class="red title-hr">
+                <h4>Czas reakcji na awarię</h4>
+                <form method="get">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="md-form md-outline input-with-post-icon datepicker">
+                                    <label for="id_od">Data od...</label>
+                                    <input type="text" placeholder="Data od..." step="1" id="id_od" name="data_od" class=" form-control">
+                                    <i class="fas fa-calendar input-prefix" tabindex=0></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="md-form md-outline input-with-post-icon datepicker">
+                                    <label for="id_do">Data do...</label>
+                                    <input type="text" placeholder="Data do..." step="1" id="id_do" name="data_do" class=" form-control">
+                                    <i class="fas fa-calendar input-prefix" tabindex=0></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="Zamkniete_Checked" checked name="zamkniete" value="tak">
+                                    <label class="form-check-label" for="Zamkniete_Checked">Material checked</label>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="test" name="eksport" value="on">
+                        <button type="submit" class="btn btn-outline-danger waves-effect btn-sm">Wyślij <i class="far fa-check-square"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+{% endblock content %}

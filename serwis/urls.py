@@ -1,5 +1,8 @@
 from django.urls import path
-from .views import nowy_RodzajUsterek, edytuj_RodzajUsterek, usun_RodzajUsterek, przywroc_RodzajUsterek, nowe_Urzadzenie, edytuj_Urzadzenie, usun_Urzadzenie, przywroc_Urzadzenie, nowy_serwisant, nowe_zgloszenie, login_request, logout_request, wpisy, wpis_szczegoly, autorzy, anuluj_zgloszenie, zakoncz_zgloszenie, wpis_zamkniete, wpis_zamkniete_szczegoly
+from .views import nowy_RodzajUsterek, edytuj_RodzajUsterek, usun_RodzajUsterek, przywroc_RodzajUsterek, nowe_Urzadzenie, \
+        edytuj_Urzadzenie, usun_Urzadzenie, przywroc_Urzadzenie, nowy_serwisant, nowe_zgloszenie, login_request, logout_request, \
+        wpisy, wpis_szczegoly, autorzy, anuluj_zgloszenie, zakoncz_zgloszenie, wpis_zamkniete, wpis_zamkniete_szczegoly, \
+        exp_czas_reakcji
 
 
 urlpatterns = [
@@ -23,6 +26,8 @@ urlpatterns = [
         path('przywroc_Urzadzenie/<int:id>/', przywroc_Urzadzenie, name='przywroc_Urzadzenie'),
         #- ZAKONCZENIE ---------------------------------------------------------
         path('potwierdz_zakoncz_zgloszenie/<int:id>/', zakoncz_zgloszenie, name='zakoncz_zgloszenie'),
+        #- EKSPORT DANYCH ------------------------------------------------------
+        path('exp_czas_reakcji/', exp_czas_reakcji, name='exp_czas_reakcji'),
         #- SYSTEM --------------------------------------------------------------
         path('login/', login_request, name='login'),
         path('logout/', logout_request, name='logout'),

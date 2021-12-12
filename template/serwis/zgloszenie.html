@@ -78,6 +78,8 @@
                                 <form method="post" role="form" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <input type="hidden" id="status_text" name="status" value=2>
+                                    <input type="hidden" id="data_zgloszenia_text" name="data_zgloszenia" value={{ zgloszenia.data_zgloszenia|date:'Y-m-d' }}>
+                                    <input type="hidden" id="czas_zgloszenia_text" name="czas_zgloszenia" value={{ zgloszenia.czas_zgloszenia }}>
                                     <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
                                     <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>
                                     <button type="submit" class="btn btn-outline-success waves-effect btn-sm" name="btn_form_podejmij">Podejmij <i class="fas fa-save fa-lg"></i></button>

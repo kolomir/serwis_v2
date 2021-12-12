@@ -61,7 +61,6 @@ class Zgloszenie(models.Model):
     zglaszajacy = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='zglaszajacy')                    #| <-- Etap I - Zgłoszenie
     rodzaj_usterki = models.ForeignKey(RodzajUsterki, on_delete=models.CASCADE, default=1)                          #| <-- Etap I - Zgłoszenie  | <-- Etap II - Przydzielenie
     urzadzenie = models.ForeignKey(Urzadzenie, on_delete=models.CASCADE, default=1)                                 #| <-- Etap I - Zgłoszenie
-    #status = models.ForeignKey(Status, on_delete=models.CASCADE, default=1)                                        #| <-- Etap I - Zgłoszenie  | <-- Etap II - Przydzielenie
     status = models.IntegerField(default=1, choices=STATUS_RODZAJ, unique=False)                                    #| <-- Etap I - Zgłoszenie  | <-- Etap II - Przydzielenie
     data_otwarcia = models.DateField('data otwarcia', default='1900-01-01', blank=True, null=True)                  #                           | <-- Etap II - Przydzielenie
     czas_otwarcia = models.TimeField('czas otwarcia', default='00:00', blank=True, null=True)                       #                           | <-- Etap II - Przydzielenie
@@ -70,6 +69,16 @@ class Zgloszenie(models.Model):
     czas_zamkniecia = models.TimeField('czas zamknięcia', default='00:00', blank=True, null=True)                   #                                                           | <-- Etap III - Zamknięcie
     data_wykonania = models.DateField('data wykonania', default='1900-01-01', blank=True, null=True)              #                                                           | <-- Etap III - Zamknięcie
     czas_wykonania = models.TimeField('czas wykonania', default='00:00', blank=True, null=True)                   #                                                           | <-- Etap III - Zamknięcie
+    czas_reakcji = models.TimeField('czas reakcji', default='00:00:00')
+    czas_reakcji_min = models.IntegerField(default=0)
+    czas_zawieszenia = models.TimeField('czas zawieszenia', default='00:00:00')
+    czas_zawieszenia_min = models.IntegerField(default=0)
+    czas_zadania = models.TimeField('czas zadania', default='00:00:00')
+    czas_zadania_min = models.IntegerField(default=0)
+    czas_pracy_serwisanta = models.TimeField('czas pracy serwisanta', default='00:00:00')
+    czas_pracy_serwisanta_min = models.IntegerField(default=0)
+    czas_zadania_pelny = models.TimeField('czas zadania pelny', default='00:00:00')
+    czas_zadania_pelny_min = models.IntegerField(default=0)
 
     def __str__(self):
         return self.temat_zgloszenia

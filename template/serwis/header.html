@@ -30,6 +30,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/zamkniete">Wpisy zamkniete</a>
                     </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLinkEksport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Eksport</a>
+                            <div class="dropdown-menu  dropdown-danger" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="/exp_czas_reakcji">Czas reakcji</a>
+                                <a class="dropdown-item" href="/">Dłógość zleceń</a>
+                                <a class="dropdown-item" href="/">Czas zawieszenia</a>
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
                 <span class="navbar-text white-text">
                     {% if user.is_authenticated %}

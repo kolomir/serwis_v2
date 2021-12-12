@@ -19,6 +19,15 @@
             var ps = new PerfectScrollbar(sideNavScrollbar);
         });
 
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            formatSubmit: 'yyyy-mm-dd'
+        });
+
+        $('#date_timepicker_end').datepicker({
+            dateFormat: 'dd-mm-yyyy' //any valid format that you want to have
+        });
+
         $(document).ready(function () {
             $('#dtUsterki').DataTable({
                 "order": [[ 0, "desc" ]]

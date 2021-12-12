@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Zgloszenie, Comments
 from .forms import RodzajUsterkiForm, KasujRodzajUsterki, UrzadzenieForm, KasujUrzadzenie, SerwisantForm, ZgloszeniForm, PodjecieZgloszeniaForm, CommentsForm, AnulowacZgloszenie, WykonanieZgloszenie, ZawieszenieZgloszenia
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+import csv
 
 
 #---------------------------------------------------
@@ -18,6 +20,30 @@ def get_author(user):
     if qs.exists():
         return qs[0]
     return None
+
+#---------------------------------------------------
+# inne
+#---------------------------------------------------
+def przerobienie_daty(data,godzina):
+   (rok1, miesiac1, dzien1) = data.split("-")
+   (godzina1, minuta1, sekunda1) = godzina.split(":")
+   return datetime(int(rok1),int(miesiac1),int(dzien1),int(godzina1),int(minuta1),int(sekunda1))
+
+
+def przerobienie_tylko_czasu(godzina):
+   (godzina1, minuta1) = godzina.split(":")
+   return datetime(int(godzina1),int(minuta1))
+
+
+def przerobienie_tylko_daty(data):
+   (rok1, miesiac1, dzien1) = data.split("-")
+   return datetime(int(rok1),int(miesiac1),int(dzien1))
+
+
+def czas_na_minuty(t):
+    #podawany jest czas w formacie HH:MM
+    h, m, s = map(int, t.split(':'))
+    return h * 60 + m
 
 
 #---------------------------------------------------
@@ -229,6 +255,7 @@ def wpisy(request):
 @login_required
 def wpis_szczegoly(request, id):
     zgloszenia = get_object_or_404(Zgloszenie, pk=id)
+
     # - czy serwisant ---------
     zglaszajacy_wpisy = get_author(request.user)
     lista_userow = get_user_model()
@@ -281,6 +308,53 @@ def wpis_szczegoly(request, id):
     czas_przekazany = czas_teraz.strftime("%H:%M")
     #'''
     if request.method == 'POST' and 'btn_form_podejmij' in request.POST:
+        data_zgloszenie = request.POST.get('data_zgloszenia')
+        czas_zgloszenie = request.POST.get('czas_zgloszenia')
+        print('--- zgloszenie ------------------------------')
+        print('data_zgloszenie: ', data_zgloszenie)
+        print('czas_zgloszenie: ', czas_zgloszenie)
+
+        przerobiony_czas_zgloszenia = przerobienie_daty(data_zgloszenie, czas_zgloszenie)
+        przerobiony_czas_podjecia = przerobienie_daty(data_zgl, czas_zgl)
+        czas_r = przerobiony_czas_podjecia - przerobiony_czas_zgloszenia
+        dni = czas_r.days
+        godziny = czas_r.seconds / 60 / 60
+        minuty = czas_r.seconds / 60
+        sek = czas_r.seconds
+
+        #przerobiony_tylko_czas_zgloszenia = przerobienie_tylko_czasu(czas_zgloszenie)
+        #przerobiony_tylko_czas_podjecia = przerobienie_tylko_czasu(czas_zgl)
+        #tylko_czas = przerobiony_tylko_czas_podjecia - przerobiony_tylko_czas_zgloszenia
+        #czas_w_minutach = czas_na_minuty(str(czas_r))
+
+        print('--- dni ------------------------------')
+        print('dni:', dni)
+        print('godziny:', godziny)
+        print('minuty:', minuty)
+        print('sek:', sek)
+        print('nr1 minęło dni: %s, godzin: %d, minut: %d' % (czas_r.days, czas_r.seconds / 3600, (czas_r.seconds % 3600) / 60))
+        print('--- czas zgloszenia ------------------------------')
+        print('przerobiony_czas_zgloszenia: ', przerobiony_czas_zgloszenia)
+        print('--- czas podjecia ------------------------------')
+        print('przerobiony_czas_podjecia: ', przerobiony_czas_podjecia)
+        print('--- czas_r ------------------------------')
+        print('czas_r: ', czas_r)
+        print('--- czas_w_minutach ------------------------------')
+        test_data_zgl = przerobienie_tylko_daty(data_zgl)
+        test_data_podj = przerobienie_tylko_daty(data_zgloszenie)
+        test_data = test_data_zgl-test_data_podj
+        print(test_data)
+        if test_data >= timedelta(days=1):
+            #test_dni = timedelta.test_data.day
+            godz = test_data.days * 24
+            #czas_w_minutach = czas_na_minuty(str(czas_r))
+            #print('czas_w_minutach:', czas_w_minutach)
+            print('godz:', godz)
+            print('dni:', test_data.days)
+            #rint('czas:', tylko_czas)
+            print('jest')
+
+        #print('czas_w_minutach: ', czas_w_minutach)
 
         if form_podjecie_zgloszenia.is_valid():
             autor = get_author(request.user)
@@ -296,7 +370,7 @@ def wpis_szczegoly(request, id):
                 ' ; czas_otwarcia:', czas_przekazany,
                 ' ; status:', status)
             print('>>---------------<<')
-            form_podjecie_zgloszenia.save()
+            #form_podjecie_zgloszenia.save()
             return redirect(wpisy)
 
     if request.method == 'POST' and 'btn_form_wykonane' in request.POST:
@@ -556,6 +630,80 @@ def logout_request(request):
 
 
 #---------------------------------------------------
+#  Eksport danych - Czas reakcji
+#---------------------------------------------------
+def is_valid_queryparam(param):
+    return param != '' and param is not None
+
+
+def exp_czas_reakcji(request):
+    #qs = Zgloszenie.objects.filter(status__gte=2).filter(status__lte=5)
+
+    data_od = request.GET.get('data_od')
+    data_do = request.GET.get('data_do')
+    eksport = request.GET.get('eksport')
+
+    tylko_zamkniete = request.GET.get('zamkniete')
+    if tylko_zamkniete == 'tak':
+        qs = Zgloszenie.objects.filter(status=5)
+    else:
+        qs = Zgloszenie.objects.filter(status__gte=2).filter(status__lte=5)
+    print('test11', tylko_zamkniete)
+
+    if is_valid_queryparam(data_od):
+        qs = qs.filter(data_zgloszenia__gte=data_od)
+    if is_valid_queryparam(data_do):
+        qs = qs.filter(data_zgloszenia__lte=data_do)
+
+    test = request.GET.get('eksport')
+    #eksport = 'on'
+    print('test ', test)
+    print('data od', data_od)
+
+    if eksport == "on":
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename = "rap_czas_reakcji.csv"'
+        response.write(u'\ufeff'.encode('utf8'))
+
+        writer = csv.writer(response, dialect='excel', delimiter=';')
+        writer.writerow(
+            [
+                'temat zgloszenia',
+                'zglaszajacy',
+                'Data zgłoszenia',
+                'Data podjęcia ',
+                'Serwisant',
+                'Status',
+                'Czas reakcji/dni',
+                'Czas reakcji/czas',
+            ]
+        )
+        for obj in qs:
+            przerobiony_czas_zgloszenia = przerobienie_daty(str(obj.data_zgloszenia), str(obj.czas_zgloszenia))
+            przerobiony_czas_otwarcia = przerobienie_daty(str(obj.data_otwarcia), str(obj.czas_otwarcia))
+            czas_reakcji = przerobiony_czas_otwarcia - przerobiony_czas_zgloszenia
+            czas_reakcji_dni = czas_reakcji.days
+            czas_reakcji_czas = '%d:%d' % (czas_reakcji.seconds / 3600, (czas_reakcji.seconds % 3600) / 60)
+            writer.writerow(
+                [
+                    obj.temat_zgloszenia,
+                    obj.zglaszajacy,
+                    obj.data_zgloszenia,
+                    obj.data_otwarcia,
+                    obj.serwisant,
+                    obj.status,
+                    czas_reakcji_dni,
+                    czas_reakcji_czas,
+                ]
+            )
+        return response
+    context = {
+        'queryset': qs,
+    }
+    return render(request, 'serwis/exp_czas_reakcji.html', context)
+
+
+#---------------------------------------------------
 #---------------------------------------------------
 #  testy
 #---------------------------------------------------
@@ -571,9 +719,6 @@ def autorzy(request):
     }
 
     return render(request, 'serwis/test.html', context)
-
-
-
 
 
 #---------------------------------------------------
