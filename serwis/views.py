@@ -801,9 +801,7 @@ def exp_czas_zawieszenia(request):
             ]
         )
         for obj in qs:
-            if str(obj.data_wstrzymania) == '1900-01-01':
-                print('pominac')
-            else:
+            if str(obj.data_wstrzymania) != '1900-01-01':
                 if str(obj.data_wznowienia) == '1900-01-01':
                     data_wznowienia = str(data_przekazana)
                     czas_wznowienia = str(czas_przekazany)
@@ -811,14 +809,11 @@ def exp_czas_zawieszenia(request):
                     data_wznowienia = str(obj.data_wznowienia)
                     czas_wznowienia = str(obj.czas_wznowienia)
 
-                print('data_wznowienia: ', data_wznowienia, '; czas_wznowienia: ', czas_wznowienia)
-
                 przerobiony_czas_wstrzymania = przerobienie_daty(str(obj.data_wstrzymania), str(obj.czas_wstrzymania))
                 przerobiony_czas_wznowienia = przerobienie_daty(str(data_wznowienia), str(czas_wznowienia))
                 czas_wstrzymania_prac = przerobiony_czas_wznowienia - przerobiony_czas_wstrzymania
                 czas_wstrzymania_prac_dni = czas_wstrzymania_prac.days
                 czas_wstrzymania_prac_czas = '%d:%d' % (czas_wstrzymania_prac.seconds / 3600, (czas_wstrzymania_prac.seconds % 3600) / 60)
-                print('obliczyc')
                 writer.writerow(
                     [
                         obj.temat_zgloszenia,
