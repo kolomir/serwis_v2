@@ -704,6 +704,142 @@ def exp_czas_reakcji(request):
 
 
 #---------------------------------------------------
+#  Eksport danych - Całkowity czas trwania zadania
+#---------------------------------------------------
+def exp_pelny_czas_zadania(request):
+    qs = Zgloszenie.objects.filter(status=5)
+
+    data_od = request.GET.get('data_od')
+    data_do = request.GET.get('data_do')
+    eksport = request.GET.get('eksport')
+
+    if is_valid_queryparam(data_od):
+        qs = qs.filter(data_zgloszenia__gte=data_od)
+    if is_valid_queryparam(data_do):
+        qs = qs.filter(data_zgloszenia__lte=data_do)
+
+    if eksport == "on":
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename = "rap_pelny_czas_zadania.csv"'
+        response.write(u'\ufeff'.encode('utf8'))
+
+        writer = csv.writer(response, dialect='excel', delimiter=';')
+        writer.writerow(
+            [
+                'temat zgloszenia',
+                'zglaszajacy',
+                'Data zgłoszenia',
+                'Data zamknięcia',
+                'Serwisant',
+                'Status',
+                'Czas zgłoszenia/dni',
+                'Czas zgłoszenia/czas',
+            ]
+        )
+        for obj in qs:
+            przerobiony_czas_zgloszenia = przerobienie_daty(str(obj.data_zgloszenia), str(obj.czas_zgloszenia))
+            przerobiony_czas_zamkniecia = przerobienie_daty(str(obj.data_zamkniecia), str(obj.czas_zamkniecia))
+            czas_zgloszenia = przerobiony_czas_zamkniecia - przerobiony_czas_zgloszenia
+            czas_zgloszenia_dni = czas_zgloszenia.days
+            czas_zgloszenia_czas = '%d:%d' % (czas_zgloszenia.seconds / 3600, (czas_zgloszenia.seconds % 3600) / 60)
+            writer.writerow(
+                [
+                    obj.temat_zgloszenia,
+                    obj.zglaszajacy,
+                    obj.data_zgloszenia,
+                    obj.data_zamkniecia,
+                    obj.serwisant,
+                    obj.status,
+                    czas_zgloszenia_dni,
+                    czas_zgloszenia_czas,
+                ]
+            )
+        return response
+    context = {
+        'queryset': qs,
+    }
+    return render(request, 'serwis/exp_pelny_czas_zadania.html', context)
+
+
+#---------------------------------------------------
+#  Eksport danych - Czas zawieszenia zadań
+#---------------------------------------------------
+def exp_czas_zawieszenia(request):
+    qs = Zgloszenie.objects.filter(status__gte=2).filter(status__lte=5)
+
+    data_teraz = datetime.now()
+    data_przekazana = data_teraz.strftime("%Y-%m-%d")
+    czas_teraz = timezone.now()
+    czas_przekazany = czas_teraz.strftime("%H:%M:%S")
+
+    data_od = request.GET.get('data_od')
+    data_do = request.GET.get('data_do')
+    eksport = request.GET.get('eksport')
+
+    if is_valid_queryparam(data_od):
+        qs = qs.filter(data_zgloszenia__gte=data_od)
+    if is_valid_queryparam(data_do):
+        qs = qs.filter(data_zgloszenia__lte=data_do)
+
+    if eksport == "on":
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename = "rap_czas_zawieszenia.csv"'
+        response.write(u'\ufeff'.encode('utf8'))
+
+        writer = csv.writer(response, dialect='excel', delimiter=';')
+        writer.writerow(
+            [
+                'temat zgloszenia',
+                'zglaszajacy',
+                'Data zgłoszenia',
+                'Data zawieszenia',
+                'Data wznowienia',
+                'Serwisant',
+                'Status',
+                'Czas zgłoszenia/dni',
+                'Czas zgłoszenia/czas',
+            ]
+        )
+        for obj in qs:
+            if str(obj.data_wstrzymania) == '1900-01-01':
+                print('pominac')
+            else:
+                if str(obj.data_wznowienia) == '1900-01-01':
+                    data_wznowienia = str(data_przekazana)
+                    czas_wznowienia = str(czas_przekazany)
+                else:
+                    data_wznowienia = str(obj.data_wznowienia)
+                    czas_wznowienia = str(obj.czas_wznowienia)
+
+                print('data_wznowienia: ', data_wznowienia, '; czas_wznowienia: ', czas_wznowienia)
+
+                przerobiony_czas_wstrzymania = przerobienie_daty(str(obj.data_wstrzymania), str(obj.czas_wstrzymania))
+                przerobiony_czas_wznowienia = przerobienie_daty(str(data_wznowienia), str(czas_wznowienia))
+                czas_wstrzymania_prac = przerobiony_czas_wznowienia - przerobiony_czas_wstrzymania
+                czas_wstrzymania_prac_dni = czas_wstrzymania_prac.days
+                czas_wstrzymania_prac_czas = '%d:%d' % (czas_wstrzymania_prac.seconds / 3600, (czas_wstrzymania_prac.seconds % 3600) / 60)
+                print('obliczyc')
+                writer.writerow(
+                    [
+                        obj.temat_zgloszenia,
+                        obj.zglaszajacy,
+                        obj.data_zgloszenia,
+                        obj.data_wstrzymania,
+                        data_wznowienia,
+                        obj.serwisant,
+                        obj.status,
+                        czas_wstrzymania_prac_dni,
+                        czas_wstrzymania_prac_czas,
+                    ]
+                )
+        return response
+    context = {
+        'queryset': qs,
+    }
+    return render(request, 'serwis/exp_czas_zawieszenia.html', context)
+
+
+#---------------------------------------------------
 #---------------------------------------------------
 #  testy
 #---------------------------------------------------

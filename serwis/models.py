@@ -69,16 +69,10 @@ class Zgloszenie(models.Model):
     czas_zamkniecia = models.TimeField('czas zamknięcia', default='00:00', blank=True, null=True)                   #                                                           | <-- Etap III - Zamknięcie
     data_wykonania = models.DateField('data wykonania', default='1900-01-01', blank=True, null=True)              #                                                           | <-- Etap III - Zamknięcie
     czas_wykonania = models.TimeField('czas wykonania', default='00:00', blank=True, null=True)                   #                                                           | <-- Etap III - Zamknięcie
-    czas_reakcji = models.TimeField('czas reakcji', default='00:00:00')
-    czas_reakcji_min = models.IntegerField(default=0)
-    czas_zawieszenia = models.TimeField('czas zawieszenia', default='00:00:00')
-    czas_zawieszenia_min = models.IntegerField(default=0)
-    czas_zadania = models.TimeField('czas zadania', default='00:00:00')
-    czas_zadania_min = models.IntegerField(default=0)
-    czas_pracy_serwisanta = models.TimeField('czas pracy serwisanta', default='00:00:00')
-    czas_pracy_serwisanta_min = models.IntegerField(default=0)
-    czas_zadania_pelny = models.TimeField('czas zadania pelny', default='00:00:00')
-    czas_zadania_pelny_min = models.IntegerField(default=0)
+    data_wstrzymania = models.DateField('data wstrzymania', default='1900-01-01', blank=True, null=True)
+    czas_wstrzymania = models.TimeField('czas wstrzymania', default='00:00', blank=True, null=True)
+    data_wznowienia = models.DateField('data wznowienia', default='1900-01-01', blank=True, null=True)
+    czas_wznowienia = models.TimeField('czas wznowienia', default='00:00', blank=True, null=True)
 
     def __str__(self):
         return self.temat_zgloszenia
