@@ -2,7 +2,7 @@ from django.urls import path
 from .views import nowy_RodzajUsterek, edytuj_RodzajUsterek, usun_RodzajUsterek, przywroc_RodzajUsterek, nowe_Urzadzenie, \
         edytuj_Urzadzenie, usun_Urzadzenie, przywroc_Urzadzenie, nowy_serwisant, nowe_zgloszenie, login_request, logout_request, \
         wpisy, wpis_szczegoly, autorzy, anuluj_zgloszenie, zakoncz_zgloszenie, wpis_zamkniete, wpis_zamkniete_szczegoly, \
-        exp_czas_reakcji, exp_pelny_czas_zadania, exp_czas_zawieszenia
+        exp_czas_reakcji, exp_pelny_czas_zadania, exp_czas_zawieszenia, exp_czas_pracy_serwisanta
 
 
 urlpatterns = [
@@ -30,6 +30,7 @@ urlpatterns = [
         path('exp_czas_reakcji/', exp_czas_reakcji, name='exp_czas_reakcji'),
         path('exp_pelny_czas_zadania/', exp_pelny_czas_zadania, name='exp_pelny_czas_zadania'),
         path('exp_czas_zawieszenia/', exp_czas_zawieszenia, name='exp_czas_zawieszenia'),
+        path('exp_czas_pracy_serwisanta/', exp_czas_pracy_serwisanta, name='exp_czas_pracy_serwisanta'),
         #- SYSTEM --------------------------------------------------------------
         path('login/', login_request, name='login'),
         path('logout/', logout_request, name='logout'),
