@@ -42,6 +42,23 @@ INSTALLED_APPS = [
     'bootstrapform',
 ]
 
+#Email Praca
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = '192.168.13.4'
+#EMAIL_USE_TLS = False
+#EMAIL_PORT = 22225
+#EMAIL_HOST_USER = ''
+#EMAIL_HOST_PASSWORD = ''
+
+#Email dom
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'plmko@rimaster.com'
+EMAIL_HOST_PASSWORD = 'Kmirek0326'
+EMAIL_RECIVE_USER = 'mirek.kolczynski@gmail.com' #adres serwisantów
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

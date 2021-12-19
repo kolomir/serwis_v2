@@ -159,6 +159,13 @@
                                 <div class="col-md-3">
                                     <form method="post" role="form" enctype="multipart/form-data">
                                         {% csrf_token %}
+                                        <input type="hidden" id="status_text" name="status" value=2>
+                                        <button type="submit" class="btn btn-outline-success waves-effect btn-sm" name="btn_form_przywrocenie">Przywrócenie <i class="fas fa-save fa-lg"></i></button>
+                                    </form>
+                                </div>
+                                <div class="col-md-3">
+                                    <form method="post" role="form" enctype="multipart/form-data">
+                                        {% csrf_token %}
                                         <input type="hidden" id="status_text" name="status" value=5>
                                         <input type="hidden" id="data_otwarcia_text" name="data_przekazana" value={{ data_przekazana }}>
                                         <input type="hidden" id="czas_otwarcia_text" name="czas_przekazany" value={{ czas_przekazany }}>

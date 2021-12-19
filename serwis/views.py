@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+from projekt.settings import EMAIL_HOST_USER, EMAIL_RECIVE_USER
+from django.core.mail import send_mail
 import csv
 
 
@@ -305,7 +307,7 @@ def wpis_szczegoly(request, id):
     data_teraz = datetime.now()
     data_przekazana = data_teraz.strftime("%Y-%m-%d")
     czas_teraz = timezone.now()
-    czas_przekazany = czas_teraz.strftime("%H:%M")
+    czas_przekazany = czas_teraz.strftime("%H:%M:%S")
     #'''
     if request.method == 'POST' and 'btn_form_podejmij' in request.POST:
         data_zgloszenie = request.POST.get('data_zgloszenia')
@@ -314,19 +316,14 @@ def wpis_szczegoly(request, id):
         print('data_zgloszenie: ', data_zgloszenie)
         print('czas_zgloszenie: ', czas_zgloszenie)
 
-        przerobiony_czas_zgloszenia = przerobienie_daty(data_zgloszenie, czas_zgloszenie)
-        przerobiony_czas_podjecia = przerobienie_daty(data_zgl, czas_zgl)
-        czas_r = przerobiony_czas_podjecia - przerobiony_czas_zgloszenia
-        dni = czas_r.days
-        godziny = czas_r.seconds / 60 / 60
-        minuty = czas_r.seconds / 60
-        sek = czas_r.seconds
-
-        #przerobiony_tylko_czas_zgloszenia = przerobienie_tylko_czasu(czas_zgloszenie)
-        #przerobiony_tylko_czas_podjecia = przerobienie_tylko_czasu(czas_zgl)
-        #tylko_czas = przerobiony_tylko_czas_podjecia - przerobiony_tylko_czas_zgloszenia
-        #czas_w_minutach = czas_na_minuty(str(czas_r))
-
+        #przerobiony_czas_zgloszenia = przerobienie_daty(data_zgloszenie, czas_zgloszenie)
+        #przerobiony_czas_podjecia = przerobienie_daty(data_zgl, czas_zgl)
+        #czas_r = przerobiony_czas_podjecia - przerobiony_czas_zgloszenia
+        #dni = czas_r.days
+        #godziny = czas_r.seconds / 60 / 60
+        #minuty = czas_r.seconds / 60
+        #sek = czas_r.seconds
+        '''
         print('--- dni ------------------------------')
         print('dni:', dni)
         print('godziny:', godziny)
@@ -352,7 +349,8 @@ def wpis_szczegoly(request, id):
             print('godz:', godz)
             print('dni:', test_data.days)
             #rint('czas:', tylko_czas)
-            print('jest')
+            print('jest')'''
+        print('zglaszajacy: ', zgloszenia.zglaszajacy)
 
         #print('czas_w_minutach: ', czas_w_minutach)
 
@@ -370,7 +368,16 @@ def wpis_szczegoly(request, id):
                 ' ; czas_otwarcia:', czas_przekazany,
                 ' ; status:', status)
             print('>>---------------<<')
-            #form_podjecie_zgloszenia.save()
+            form_podjecie_zgloszenia.save()
+            wyslij_email = get_object_or_404(lista_userow, username__exact=zgloszenia.zglaszajacy)
+            print('wyslij:',wyslij_email.email)
+            if request.method == 'POST':
+                subject = 'Otwarto zgłoszenie serwisowe [' + str(id) + ']'
+                message = 'Zgłoszenie serwisowe zostało otwarte w dniu ' + str(data_przekazana) + ' godz: ' + str(czas_przekazany) + '\n\n'
+                message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+                message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+                recepient = wyslij_email.email
+                send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
             return redirect(wpisy)
 
     if request.method == 'POST' and 'btn_form_wykonane' in request.POST:
@@ -387,6 +394,15 @@ def wpis_szczegoly(request, id):
                 )
             print('>>---------------<<')
             form_wykonanie_zgloszenia.save()
+            wyslij_email = get_object_or_404(lista_userow, username__exact=zgloszenia.zglaszajacy)
+            print('wyslij:',wyslij_email.email)
+            if request.method == 'POST':
+                subject = 'Wykonanie zgłoszenia serwisowego [' + str(id) + ']'
+                message = 'Zgłoszenie serwisowe zostało wykonane w dniu ' + str(data_przekazana) + ' godz: ' + str(czas_przekazany) + '\n\n'
+                message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+                message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+                recepient = wyslij_email.email
+                send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
             return redirect(wpisy)
 
     if request.method == 'POST' and 'btn_form_wstrzymane' in request.POST:
@@ -400,6 +416,13 @@ def wpis_szczegoly(request, id):
                 ' ; status:', status)
             print('>>-----------------<<')
             form_wykonanie_zgloszenia.save()
+            if request.method == 'POST':
+                subject = 'Wstrzymanie zgłoszenia serwisowego [' + str(id) + ']'
+                message = 'Zgłoszenie serwisowe w dniu ' + str(data_przekazana) + ' godz: ' + str(czas_przekazany) + ' zostaje wstrzymane\n\n'
+                message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+                message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+                recepient = EMAIL_RECIVE_USER
+                send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
             return redirect(wpisy)
 
     if request.method == 'POST' and 'btn_form_przywrocenie' in request.POST:
@@ -413,6 +436,13 @@ def wpis_szczegoly(request, id):
                 ' ; status:', status)
             print('>>------------------<<')
             form_wykonanie_zgloszenia.save()
+            if request.method == 'POST':
+                subject = 'Przywrócenie zgłoszenia serwisowego [' + str(id) + ']'
+                message = 'Zgłoszenie serwisowe w dniu ' + str(data_przekazana) + ' godz: ' + str(czas_przekazany) + ' zostaje przywrócone\n\n'
+                message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+                message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+                recepient = EMAIL_RECIVE_USER
+                send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
             return redirect(wpisy)
 # TODO: zminić sposób zatwierdzania. Powinna być strona uperniająca z potwierdzeniem tak jak przy anulowaniu zlecenia
     if request.method == 'POST' and 'btn_form_zakonczenie' in request.POST:
@@ -428,6 +458,13 @@ def wpis_szczegoly(request, id):
                 ' ; status:', status)
             print('>>----------------<<')
             form_wykonanie_zgloszenia.save()
+            if request.method == 'POST':
+                subject = 'Zakończenie zgłoszenia serwisowego [' + str(id) + ']'
+                message = 'Zgłoszenie serwisowe w dniu ' + str(data_przekazana) + ' godz: ' + str(czas_przekazany) + ' zostaje zakończone\n\n'
+                message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+                message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+                recepient = EMAIL_RECIVE_USER
+                send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
             return redirect(wpisy)
     #'''
     if request.method == 'POST':# and 'btn_form_komentarz' in request.POST:
@@ -448,6 +485,19 @@ def wpis_szczegoly(request, id):
                 ' ; tresc:', tresci,
                 ' ; zgloszenie:', zgloszenie_com)
             form_komentarze.save()
+            wyslij_email = get_object_or_404(lista_userow, username__exact=zgloszenia.zglaszajacy)
+            zglaszajacy_wiadomosc = wyslij_email.email
+            print('test wyslij:',wyslij_email.email)
+            lista_wiadomosci = [zglaszajacy_wiadomosc, EMAIL_RECIVE_USER]
+            if request.method == 'POST':
+                for wysylaj in lista_wiadomosci:
+                    print('wyslij:', wysylaj)
+                    subject = 'Nowy komentarz do zgłoszenia serwisowego [' + str(id) + ']'
+                    message = 'Sprawdź nowy komentarz do zgłoszenia serwisowego dodany w dniu ' + str(data_przekazana) + ' godz: ' + str(czas_przekazany) + '\n\n'
+                    message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+                    message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+                    recepient = wysylaj
+                    send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
     #'''
 
     context = {
@@ -477,6 +527,12 @@ def nowe_zgloszenie(request):
     zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
     serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
     wyslij = int(serwisy.serwis)
+    #- Nr nowego zgłoszenia ----------------------------------
+    ile = Zgloszenie.objects.last()
+    if ile == None:
+        id = 1
+    else:
+        id = ile.id + 1
 
 
     #-STREFA TESTU ---------------------------------------------------
@@ -509,6 +565,13 @@ def nowe_zgloszenie(request):
         form_zgloszenie.instance.data_zgloszenia = request.POST.get('data_zgloszenia')
         form_zgloszenie.instance.czas_zgloszenia = request.POST.get('czas_zgloszenia')
         form_zgloszenie.save()
+        if request.method == 'POST':
+            subject = 'Nowe zgłoszenie serwisowe [' + str(id) + ']'
+            message = 'Oczekuje nowe zgłoszenie serwisowe dodane w dniu ' + str(data_zgloszenia) + ' godz: ' + str(czas_zgloszenia) + '\n\n'
+            message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+            message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+            recepient = EMAIL_RECIVE_USER
+            send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
         return redirect(wpisy)
 
     context = {
@@ -548,6 +611,13 @@ def anuluj_zgloszenie(request, id):
         form_wpis.instance.data_zamkniecia = request.POST.get('data_zamkniecia')
         form_wpis.instance.czas_zamkniecia = request.POST.get('czas_zamkniecia')
         form_wpis.save()
+        if request.method == 'POST':
+            subject = 'Anulowanie zgłoszenia serwisowego [' + str(id) + ']'
+            message = 'Zgłoszenie serwisowe zostało anulowane w dniu ' + str(data_zamkniecia) + ' godz: ' + str(czas_zamkniecia) + '\n\n'
+            message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+            message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+            recepient = EMAIL_RECIVE_USER
+            send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
         return redirect(wpisy)
 
 
@@ -586,6 +656,13 @@ def zakoncz_zgloszenie(request, id):
         form_wpis.instance.data_zamkniecia = request.POST.get('data_przekazana')
         form_wpis.instance.czas_zamkniecia = request.POST.get('czas_przekazany')
         form_wpis.save()
+        if request.method == 'POST':
+            subject = 'Zamknięcie zgłoszenia serwisowego [' + str(id) + ']'
+            message = 'Zgłoszenie serwisowe zostało zamknięte w dniu ' + str(data_przekazana) + ' godz: ' + str(czas_przekazany) + '\n\n'
+            message += 'Zgłoszenie możesz znaleźć pod adresem:\n'
+            message += 'http://127.0.0.1:8000/zgloszenie/' + str(id) + '/\n'
+            recepient = EMAIL_RECIVE_USER
+            send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
         return redirect(wpisy)
 
 
