@@ -72,7 +72,7 @@
             </table>
             </div>
         </div>
-        {% if serwisant == 1 %}
+        {% if serwisant == 1 and nadzor == 0 %}
         <div class="row">
             <div class="col-xl-12 col-md-12 dystans">
                 <h5><strong>Twoje zgłoszenia</strong></h5>
@@ -143,7 +143,7 @@
             </table>
             </div>
         </div>
-        {% else %}
+        {% elif serwisant == 0 and nadzor == 0 %}
         <div class="row">
             <div class="col-xl-12 col-md-12 dystans">
                 <h5><strong>Twoje zgłoszenia</strong></h5>

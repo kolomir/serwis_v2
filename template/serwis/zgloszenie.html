@@ -88,11 +88,13 @@
                             {% endif %}
                             <!--/.Serwisant - koniec-->
                             <!--Właściciel - anulowanie zgłoszenia-->
-                            {% if serwisant == 0 %}
+                            {% if serwisant == 0 or nadzor == 0 %}
+                            {% if zgloszenia.zglaszajacy|stringformat:"s" == user|stringformat:"s" %}
+
                             <div class="col-md-3">
                                 <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger waves-effect btn-sm">Anuluj</a>
                             </div>
-                            {% endif %}
+                            {% endif %}{% endif %}
                             <!--/.Właściciel - koniec-->
                         {% endif %}
 
@@ -113,7 +115,7 @@
                             {% endif %}
                             <!--/.Serwisant - koniec-->
                         {% endif %}
-                        {% if zgloszenia.zglaszajacy|stringformat:"s" == user|stringformat:"s" %}
+                        {% if zgloszenia.zglaszajacy|stringformat:"s" == user|stringformat:"s" or nadzor == 1 %}
                             {% if zgloszenia.status == 2 %}
                                 <!--serwisant - przeniesienie do grupy oczekujących zadań-->
                                 {% if serwisant == 0 %}
@@ -127,7 +129,7 @@
                                 {% endif %}
                                 <!--/.Serwisant - koniec-->
                                 <!--Właściciel - Anulowanie zlecenia-->
-                                {% if serwisant == 0 %}
+                                {% if serwisant == 0 and nadzor == 0 %}
                                 <div class="col-md-3">
                                     <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger waves-effect btn-sm">Anuluj</a>
                                 </div>
@@ -147,7 +149,7 @@
                                 {% endif %}
                                 <!--/.Serwisant - koniec-->
                                 <!--Właściciel - Anulowanie zlecenia-->
-                                {% if serwisant == 0 %}
+                                {% if serwisant == 0 and nadzor == 0 %}
                                 <div class="col-md-3">
                                     <a href="{% url 'anuluj_zgloszenie' zgloszenia.id %}" class="btn btn-outline-danger waves-effect btn-sm">Anuluj</a>
                                 </div>
@@ -179,7 +181,7 @@
                 </div>
             </div>
             <br /><br />
-            {% if zgloszenia.zglaszajacy|stringformat:"s" == user|stringformat:"s" or zgloszenia.serwisant|stringformat:"s" == user|stringformat:"s" %}
+            {% if zgloszenia.zglaszajacy|stringformat:"s" == user|stringformat:"s" or zgloszenia.serwisant|stringformat:"s" == user|stringformat:"s" or nadzor == 1 %}
             <div class="row justify-content-md-center">
                 <div class="col-xl-6 col-md-6">
                     <h5><strong>Zostaw wiadomość</strong></h5>

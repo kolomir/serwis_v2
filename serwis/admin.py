@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Status, Zgloszenie
+from .models import Autor, RodzajUsterki, Urzadzenie, Serwisant, Status, Zgloszenie, Comments
 
 
 @admin.register(Autor)
 class AutorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'serwis', 'aktywny')
+    list_display = ('id', 'user', 'serwis', 'nadzor', 'aktywny')
     list_filter = ('aktywny',)
 
 
@@ -41,3 +41,10 @@ class ZgloszenieAdmin(admin.ModelAdmin):
     list_display = ('id', 'temat_zgloszenia', 'data_zgloszenia', 'rodzaj_usterki', 'urzadzenie', 'status')
     list_filter = ('rodzaj_usterki', 'urzadzenie', 'status')
     search_fields = ('id', 'temat_zgloszenia', 'data_zgloszenia', 'rodzaj_usterki', 'urzadzenie', 'status')
+
+
+@admin.register(Comments)
+class KomentarzeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'data_wpisu', 'czas_wpisu', 'zgloszenie', 'autor', 'tresc')
+    list_filter = ('data_wpisu', 'autor')
+    search_fields = ('data_wpisu', 'czas_wpisu', 'zgloszenie', 'autor', 'tresc')

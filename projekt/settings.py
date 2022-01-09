@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'serwis',
     'bootstrapform',
+    'django_extensions',
 ]
 
 #Email Praca

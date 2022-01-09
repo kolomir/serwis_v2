@@ -11,7 +11,7 @@
                         <a class="nav-link" href="/">Wpisy</a>
                     </li>
                     {% if user.is_authenticated %}
-                        {% if serwisant == 0 %}
+                        {% if serwisant == 0 and nadzor == 0 %}
                         <li class="nav-item">
                             <a class="nav-link" href="/nowe_zgloszenie">Nowe zgłoszenie</a>
                         </li>
@@ -44,7 +44,7 @@
                 </ul>
                 <span class="navbar-text white-text">
                     {% if user.is_authenticated %}
-                    <small>Jesteś zalogowany jako: </small><b><em>{{ user }}</em></b>
+                    <small>Jesteś zalogowany jako: </small><b><em>{{ user.first_name }} {{ user.last_name }}</em></b>
                     {% else %}
                         Nie jesteś zalogowany!
                     {% endif %}

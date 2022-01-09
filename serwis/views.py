@@ -230,6 +230,7 @@ def wpisy(request):
         lista_userow = get_user_model()
         zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
         serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
+        nadzor = int(serwisy.nadzor)
         serwisant = int(serwisy.serwis)
         zgloszenia_zglaszajacy = Zgloszenie.objects.filter(status__gte=2,status__lte=4).filter(zglaszajacy=zglaszajacy_wpisy.id).order_by('status')
         zgloszenia_serwis = Zgloszenie.objects.filter(serwisant_id=zglaszajacy_wpisy.id).filter(status__gte=2,status__lt=4).order_by('status','data_zgloszenia', 'czas_zgloszenia')
@@ -237,6 +238,7 @@ def wpisy(request):
         zgloszenia_zglaszajacy = ""
         zgloszenia_serwis = ""
         serwisant = ""
+        nadzor = ""
 
     zgloszenia = Zgloszenie.objects.filter(status__lte=4).order_by('data_zgloszenia', 'czas_zgloszenia')
 
@@ -247,6 +249,7 @@ def wpisy(request):
         'zgloszenia_zglaszajacy': zgloszenia_zglaszajacy,
         'zgloszenia_serwis': zgloszenia_serwis,
         'serwisant': serwisant,
+        'nadzor': nadzor,
     }
     return render(request, 'serwis/wpisy.html', context)
 
@@ -264,6 +267,7 @@ def wpis_szczegoly(request, id):
     zalogowany_user = get_object_or_404(lista_userow, username__exact=zglaszajacy_wpisy)
     serwisy = get_object_or_404(Autor, user_id__exact=zalogowany_user.id)
     serwisant = int(serwisy.serwis)
+    nadzor = int(serwisy.nadzor)
 
     # - forms - podjęcie zgłoszenia -----------------
     form_podjecie_zgloszenia = PodjecieZgloszeniaForm(request.POST or None, request.FILES or None, instance=zgloszenia)
@@ -276,6 +280,9 @@ def wpis_szczegoly(request, id):
 
     # - forms - komentarze --------------------------
     komentarze = Comments.objects.filter(zgloszenie=zgloszenia.id).order_by('data_wpisu')
+    #autor_wpis = komentarze.autor_id
+    #autor_wpisu = komentarze.filter(autor__user_id__user__id__exact=autor_wpis)
+    #autor_wpisu = komentarze.filter(autor_id__exact=user_id)
     form_komentarze = CommentsForm(request.POST or None, request.FILES or None)
 
     # =================================================================
@@ -506,6 +513,7 @@ def wpis_szczegoly(request, id):
         'data_przekazana': data_przekazana,
         'czas_przekazany': czas_przekazany,
         'serwisant': serwisant,
+        'nadzor': nadzor,
         'komentarze': komentarze,
         'form_komentarze': form_komentarze,
     }
