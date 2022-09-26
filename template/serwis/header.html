@@ -12,7 +12,7 @@
                         <a class="nav-link" href="/">Wpisy</a>
                     </li>
                     {% if user.is_authenticated %}
-                        {% if serwisant == 0 and nadzor == 0 %}
+                        {% if nadzor == 0 %}
                         <li class="nav-item">
                             <a class="nav-link" href="/nowe_zgloszenie">Nowe zgłoszenie</a>
                         </li>

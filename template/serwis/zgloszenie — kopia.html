@@ -98,9 +98,9 @@
                             <!--/.Właściciel - koniec-->
                         {% endif %}
 
-                        {% if zgloszenia.serwisant|stringformat:"s" == user|stringformat:"s" %}
+                        {% if zgloszenia.status == 2 %}
                             <!--Serwisant - wykonanie zadania-->
-                            {% if zgloszenia.status == 2 %}
+                            {% if zgloszenia.serwisant|stringformat:"s" == user|stringformat:"s" %}
                                 {% if serwisant == 1 %}
                                 <div class="col-md-3">
                                     <form method="post" role="form" enctype="multipart/form-data">
@@ -111,27 +111,10 @@
                                         <button type="submit" class="btn btn-outline-primary waves-effect btn-sm" name="btn_form_wykonane">Wykonane <i class="fas fa-save fa-lg"></i></button>
                                     </form>
                                 </div>
-                                <div class="col-md-3">
-                                    <form method="post" role="form" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <input type="hidden" id="status_text" name="status" value=3>
-                                        <button type="submit" class="btn btn-outline-danger waves-effect btn-sm" name="btn_form_wstrzymane">Wstrzymać <i class="fas fa-save fa-lg"></i></button>
-                                    </form>
-                                </div>
                                 {% endif %}
-                            {% endif %}
-                            {% if zgloszenia.status == 3 %}
-                                <div class="col-md-3">
-                                    <form method="post" role="form" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <input type="hidden" id="status_text" name="status" value=2>
-                                        <button type="submit" class="btn btn-outline-success waves-effect btn-sm" name="btn_form_przywrocenie">Przywrócenie <i class="fas fa-save fa-lg"></i></button>
-                                    </form>
-                                </div>
                             {% endif %}
                             <!--/.Serwisant - koniec-->
                         {% endif %}
-
                         {% if zgloszenia.zglaszajacy|stringformat:"s" == user|stringformat:"s" or nadzor == 1 %}
                             {% if zgloszenia.status == 2 %}
                                 <!--serwisant - przeniesienie do grupy oczekujących zadań-->
